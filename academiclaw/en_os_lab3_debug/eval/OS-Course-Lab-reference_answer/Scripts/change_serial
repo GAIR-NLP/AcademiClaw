@@ -1,0 +1,96 @@
+#!/usr/bin/env python3
+"""
+标题: change_serial - 将评分用的 SERIAL 写入内核镜像占位符
+
+Input:
+  - 参数:
+      - kernel_img_path (str, required): kernel 镜像路径（通常为 build/kernel.img）
+      - serial (str, required, pattern="^[A-Za-z0-9]+$"): 评分用随机串（长度通常为 13）
+  - 上下文:
+      - 该脚本运行在 docker 镜像 `ipads/oslab:25.03` 内（或任意 Linux 环境）。
+      - 用于替代原本的 Linux ELF `Scripts/change_serial`（在部分 x86_64 用户态仿真环境会触发 Illegal instruction）。
+
+Output:
+  - 返回:
+      - exit code 0: 替换成功
+  - 副作用:
+      - 原地修改 kernel 镜像文件内容（写入 serial 并保证以 `\\0` 结尾）
+  - 错误:
+      - FileNotFoundError: kernel_img_path 不存在
+      - ValueError: 未找到/找到多个占位符，或 serial 含非法字符
+
+Why:
+  - 评分脚本会生成随机 serial，并要求内核输出携带该 serial，避免硬编码输出。
+  - 使用纯 Python 实现可在仿真/跨平台环境下稳定执行。
+
+References:
+  - ChCore Lab 评分机制：SERIAL 写入 kernel.img 的占位符字符串（默认 `0xDEADBEEF`）
+
+Calls:
+  - pathlib.Path.read_bytes / write_bytes
+
+Example:
+  - 输入: change_serial build/kernel.img AbC123... (13 chars)
+  - 输出: 将 kernel.img 内的占位符 `0xDEADBEEF` 替换为 `AbC123...\\0`
+"""
+
+from __future__ import annotations
+
+import argparse
+import re
+from pathlib import Path
+
+
+PLACEHOLDER = b"0xDEADBEEF"
+
+
+def _validate_serial(serial: str) -> None:
+    if not re.fullmatch(r"[A-Za-z0-9]+", serial):
+        raise ValueError(f"serial contains invalid characters: {serial!r}")
+    if len(serial) <= 0:
+        raise ValueError("serial must be non-empty")
+    # serial_number is declared as 4096 in the kernel.
+    if len(serial) >= 4096:
+        raise ValueError("serial is too long")
+
+
+def _find_unique(haystack: bytes, needle: bytes) -> int:
+    first = haystack.find(needle)
+    if first < 0:
+        raise ValueError(f"placeholder {needle!r} not found in kernel image")
+    second = haystack.find(needle, first + 1)
+    if second >= 0:
+        raise ValueError(f"placeholder {needle!r} found multiple times in kernel image")
+    return first
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(
+        description="Patch kernel.img placeholder with grading serial (portable replacement)."
+    )
+    parser.add_argument(
+        "kernel_img_path",
+        type=str,
+        help="Path to kernel image (e.g., build/kernel.img).",
+    )
+    parser.add_argument("serial", type=str, help="Serial string (alphanumeric).")
+    args = parser.parse_args()
+
+    _validate_serial(args.serial)
+
+    img_path = Path(args.kernel_img_path)
+    data = img_path.read_bytes()
+
+    off = _find_unique(data, PLACEHOLDER)
+    serial_bytes = args.serial.encode("ascii")
+
+    patched = bytearray(data)
+    patched[off : off + len(serial_bytes)] = serial_bytes
+    patched[off + len(serial_bytes)] = 0  # NULL-terminate
+
+    img_path.write_bytes(patched)
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

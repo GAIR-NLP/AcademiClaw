@@ -1,0 +1,74 @@
+{
+  "task_id": "zh_touji_caiyang",
+  "model_name": "glm-5",
+  "agent_type": "openclaw",
+  "best_score": 86,
+  "best_attempt": 1,
+  "total_attempts": 1,
+  "passed": true,
+  "attempts": [
+    {
+      "attempt_index": 1,
+      "score": 86,
+      "passed": true,
+      "workspace_path": "/tmp/isolated_output_1091/attempt_1",
+      "agent_output_length": 255,
+      "eval_report": {
+        "总分": 86,
+        "结果评分": {
+          "分数": 25,
+          "详情": {
+            "一、文件交付 (10分)": {
+              "1.1 inference.py": "5/5 — 存在 (25366 bytes)",
+              "1.2 benchmark_report.md": "5/5 — 存在 (7732 bytes)"
+            },
+            "四、报告质量 (15分)": {
+              "4.1 格式 (3)": "3/3",
+              "4.2 Temperature 对比 (4)": "4/4 — 发现 5 组温度值",
+              "4.3 Speedup 指标 (4)": "4/4",
+              "4.4 分析说明 (4)": "4/4"
+            }
+          }
+        },
+        "过程评分": {
+          "分数": 61,
+          "详情": {
+            "二、代码结构 (15分)": {
+              "2.1 语法正确": "3/3",
+              "2.2 Baseline 函数": "3/3",
+              "2.3 Speculative 函数": "3/3",
+              "2.4 函数签名": "3/3",
+              "2.5 GPTLite 导入": "3/3"
+            },
+            "三、算法正确性 (30分)": {
+              "3.1 随机采样 (5)": "5/5",
+              "3.2 Rejection Sampling (7)": "7/7",
+              "3.3 修正分布重采样 (7)": "7/7",
+              "3.4 KV-Cache 回滚 (6)": "6/6",
+              "3.5 Temperature 处理 (5)": "5/5"
+            },
+            "五、LLM 评审 (30分)": {
+              "5.1 算法正确性 (12)": "6/12 — 实现了基本的投机采样与拒绝采样框架：有 p_draft <= p_target 无条件接受、p_draft > p_target 时以 p_target/p_draft 概率接受，以及在拒绝时从 max(0, p_target - p_draft) 归一化后重采样，且 target 一次前向验证所有 draft token。主要问题：1）温度处理存在数学不一致：采样 logits 和计算 target/draft 概率时都对 logits 除以 temperature，但 rejection sampling 理论要求接受概率基于同一物理分布 p_target, p_draft；如果 baseline 的采样分布没有一致使用相同温度变换，则不能严格保证“与 Target Model 一致”的分布无偏。2）det 版本同样在概率上使用温度缩放，且假设“p_draft = p_target”来论证位完美一致，这在一般任务下并不成立。3）部分边界处理略显粗糙：diff_sum 近似零时直接退回 target_prob，而此时应更明确地退化为 target 分布，虽然对数值影响较小但理论上不够严谨。总体属于“核心逻辑具备，但在温度/分布严格一致性和边界细节上有明显缺陷”。",
+              "5.2 工程实现质量 (10)": "5/10 — 正向工程点：1）有明确的 baseline 与 speculative 两套实现；2）target 在 speculative_sampling(speculative_sampling_det) 中一次前向验证所有 draft tokens（verify_input = [idx] + draft_tokens），满足并行验证要求；3）提供了 rollback_kv_cache，并使用切片 k[:, :, :target_length, :] 形式，实现了零拷贝回滚这一关键能力。问题和减分点：1）在给出的 speculative_sampling / speculative_sampling_det 中并没有真正利用 KV cache：每次 draft/target 调用都用完整序列重新 forward（draft_model(temp_idx, None), target_model(verify_input, None)），没有将 past_key_values 传入，也没有在主循环中使用 rollback_kv_cache；2）大量使用 torch.cat 扩展 idx / temp_idx / verify_input，导致每步都重新分配内存，违背“高效 KV-Cache + 无重分配”的工程目标；3）det 版本的结构重复，与非 det 版本几乎相同，尚未抽象出可复用模块；4）后半部分 optimized 实现被截断（speculative_sampling_optimized 未完整呈现），无法证明真正实现了高效路径。综合来看，有一定工程考虑，但未真正把 KV cache + 零拷贝回滚与主推理流程打通，且存在冗余 cat，工程效率属于中等偏下。",
+              "5.3 完整性与鲁棒性 (8)": "5/8 — 正向点：1）实现了 Baseline（autoregressive_sampling, autoregressive_sampling_det）和 Speculative（speculative_sampling, speculative_sampling_det）两种推理模式；2）temperature=0 时在采样函数中退化为 argmax（greedy），并在 baseline 与 speculative 中统一调用这些工具函数，基本满足温度分支需求；3）支持 gamma 参数控制草稿长度；4）有用于 bitwise 一致性的 PreservedRNG 封装。缺失与问题：1）没有看到完整的 optimized 版本（speculative_sampling_optimized 被截断），因此无法确认“高效 KV-Cache 回滚版”的实际可运行性；2）对 EOS/序列结束等边界情况没有处理（生成到 max_new_tokens 就硬截断，没有在遇到结束 token 时提前停止）；3）det 版本的理论假设（draft=target）不成立时，不能保证与 baseline 的一致性，也没有降级逻辑；4）未展示顶层入口/参数选择逻辑（例如如何在 temperature=0 时自动切到 greedy，或者在随机模式下选择 det 与非 det 版本）。整体来看功能大致齐全，但缺乏一些关键边界处理和完整的优化路径。",
+              "总评": "代码在概念上覆盖了任务要求的主要点：实现了 baseline 与 speculative 两种推理，支持 temperature>0 的随机采样，并在算法层面实现了标准的接受/拒绝 + residual 分布重采样框架，以及一次前向并行验证所有 draft token。同时提供了 KV cache 回滚接口和用于 bitwise 比对的 RNG 封装。主要不足在于：（1）温度处理与分布一致性的数学细节不够严谨，严格意义上不能完全保证“与目标模型分布无损一致”；（2）KV cache 在主逻辑中基本未被利用，推理仍通过反复 torch.cat 和全序列前向来实现，工程性能与题目目标存在偏差；（3）optimized 版本被截断，缺乏一个真正完成的高效实现；（4）缺少 EOS 等边界情况处理。整体处于‘算法思路正确，但工程落地与细节完备度一般’的水平。",
+              "评估模型": "openai/gpt-5.1"
+            }
+          }
+        },
+        "分项得分": {
+          "文件交付": "10/10",
+          "代码结构": "15/15",
+          "算法正确性": "30/30",
+          "报告质量": "15/15",
+          "LLM 评审": "16/30"
+        },
+        "评语": "良好。核心算法基本正确，有改进空间。"
+      },
+      "feedback": "Score: 86/100\n\nComment: 良好。核心算法基本正确，有改进空间。",
+      "timestamp": "2026-04-09T01:45:32.461764"
+    }
+  ],
+  "start_time": "2026-04-09T01:17:30.940268",
+  "end_time": "2026-04-09T01:45:32.461953"
+}

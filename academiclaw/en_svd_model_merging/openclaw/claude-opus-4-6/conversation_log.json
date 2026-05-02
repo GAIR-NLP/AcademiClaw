@@ -1,0 +1,847 @@
+{
+  "task_id": "en_svd_model_merging",
+  "model_name": "claude-opus-4-6",
+  "agent_type": "openclaw",
+  "start_time": "2026-04-18T14:08:26.577649",
+  "end_time": "2026-04-18T14:10:02.842510",
+  "total_attempts": 1,
+  "best_score": 70,
+  "messages": [
+    {
+      "timestamp": "2026-04-18T14:08:26.663168",
+      "role": "user",
+      "content": "# Task: Isotropic Model Merging Algorithm Implementation\n\n## Query\nPlease read the query.md file in the workspace directory for task requirements; the context directory contains the paper summary and code template. Please implement the iso_c_merging and iso_cts_merging functions and save them as merging_interface.py.\n\n## Deliverables\n1. merging_interface.py - Complete implementation containing iso_c_merging and iso_cts_merging functions\n\n## Instructions\n- Work in the current directory\n- Create all required files as specified\n- Ensure the code is runnable and produces the expected output",
+      "attempt": 1,
+      "message_type": "initial_prompt"
+    },
+    {
+      "timestamp": "2026-04-18T14:10:02.710673",
+      "role": "assistant",
+      "content": "Let me start by reading the query and context files.",
+      "attempt": 1,
+      "message_type": "response",
+      "metadata": {
+        "agent_type": "openclaw",
+        "model": "claude-opus-4-6",
+        "session_id": "cc07a379-dfe7-4794-85ab-ee5a2bfd62b7",
+        "exit_code": 0,
+        "raw_openclaw_output": {
+          "payloads": [
+            {
+              "text": "Let me start by reading the query and context files.",
+              "mediaUrl": null
+            },
+            {
+              "text": "Now I have a clear picture of both algorithms. Let me implement them.",
+              "mediaUrl": null
+            },
+            {
+              "text": "Now let me verify it runs correctly with the dummy data:",
+              "mediaUrl": null
+            },
+            {
+              "text": "Both algorithms run cleanly. Here's a summary of what's implemented in `merging_interface.py`:\n\n### `iso_c_merging` (Algorithm 1 — Isotropic Merging in Common Subspace)\n1. Computes task vectors Δ_t = θ_t − θ_0 for each fine-tuned model\n2. **For 0D/1D tensors** (bias, LayerNorm): averages the task vectors, scales by α, adds to pretrained weights\n3. **For 2D weight matrices**: sums all task vectors → SVD → replaces the singular value spectrum with the mean σ̄ → reconstructs as α · σ̄ · U·Vᵀ + θ_0\n\n### `iso_cts_merging` (Algorithm 2 — Common + Task-Specific Subspaces)\n1. Same task vector computation and 0D/1D handling as Iso-C\n2. **For 2D matrices**:\n   - Extracts the **common subspace** (top-k singular vectors of ΔTA, where k = ⌊0.8·r⌋)\n   - For each task, projects onto the **orthogonal complement** of the common subspace, then takes top-s singular vectors (s = ⌊(r−k)/T⌋)\n   - **Concatenates** all bases and applies **whitening** (SVD-based orthogonalization) to both U★ and V★\n   - Computes the isotropic factor σ̄ from all collected singular values\n   - Reconstructs as α · σ̄ · U★·V★ᵀ + θ_0",
+              "mediaUrl": null
+            }
+          ],
+          "meta": {
+            "durationMs": 68671,
+            "agentMeta": {
+              "sessionId": "cc07a379-dfe7-4794-85ab-ee5a2bfd62b7",
+              "provider": "relay",
+              "model": "claude-opus-4-6",
+              "usage": {
+                "input": 97929,
+                "output": 3652,
+                "total": 24428
+              },
+              "lastCallUsage": {
+                "input": 24016,
+                "output": 412,
+                "cacheRead": 0,
+                "cacheWrite": 0,
+                "total": 24428
+              },
+              "promptTokens": 24016
+            },
+            "aborted": false,
+            "systemPromptReport": {
+              "source": "run",
+              "generatedAt": 1776521333806,
+              "sessionId": "cc07a379-dfe7-4794-85ab-ee5a2bfd62b7",
+              "sessionKey": "agent:main:main",
+              "provider": "relay",
+              "model": "claude-opus-4-6",
+              "workspaceDir": "/tmp/isolated_workspace_1091",
+              "bootstrapMaxChars": 20000,
+              "bootstrapTotalMaxChars": 150000,
+              "bootstrapTruncation": {
+                "warningMode": "once",
+                "warningShown": false,
+                "truncatedFiles": 0,
+                "nearLimitFiles": 0,
+                "totalNearLimit": false
+              },
+              "sandbox": {
+                "mode": "off",
+                "sandboxed": false
+              },
+              "systemPrompt": {
+                "chars": 20245,
+                "projectContextChars": 5972,
+                "nonProjectContextChars": 14273
+              },
+              "injectedWorkspaceFiles": [
+                {
+                  "name": "AGENTS.md",
+                  "path": "/tmp/isolated_workspace_1091/AGENTS.md",
+                  "missing": false,
+                  "rawChars": 208,
+                  "injectedChars": 208,
+                  "truncated": false
+                },
+                {
+                  "name": "SOUL.md",
+                  "path": "/tmp/isolated_workspace_1091/SOUL.md",
+                  "missing": false,
+                  "rawChars": 1664,
+                  "injectedChars": 1664,
+                  "truncated": false
+                },
+                {
+                  "name": "TOOLS.md",
+                  "path": "/tmp/isolated_workspace_1091/TOOLS.md",
+                  "missing": false,
+                  "rawChars": 850,
+                  "injectedChars": 850,
+                  "truncated": false
+                },
+                {
+                  "name": "IDENTITY.md",
+                  "path": "/tmp/isolated_workspace_1091/IDENTITY.md",
+                  "missing": false,
+                  "rawChars": 633,
+                  "injectedChars": 633,
+                  "truncated": false
+                },
+                {
+                  "name": "USER.md",
+                  "path": "/tmp/isolated_workspace_1091/USER.md",
+                  "missing": false,
+                  "rawChars": 474,
+                  "injectedChars": 474,
+                  "truncated": false
+                },
+                {
+                  "name": "HEARTBEAT.md",
+                  "path": "/tmp/isolated_workspace_1091/HEARTBEAT.md",
+                  "missing": false,
+                  "rawChars": 167,
+                  "injectedChars": 167,
+                  "truncated": false
+                },
+                {
+                  "name": "BOOTSTRAP.md",
+                  "path": "/tmp/isolated_workspace_1091/BOOTSTRAP.md",
+                  "missing": false,
+                  "rawChars": 1449,
+                  "injectedChars": 1449,
+                  "truncated": false
+                }
+              ],
+              "skills": {
+                "promptChars": 3375,
+                "entries": [
+                  {
+                    "name": "coding-agent",
+                    "blockChars": 823
+                  },
+                  {
+                    "name": "healthcheck",
+                    "blockChars": 482
+                  },
+                  {
+                    "name": "node-connect",
+                    "blockChars": 532
+                  },
+                  {
+                    "name": "skill-creator",
+                    "blockChars": 750
+                  },
+                  {
+                    "name": "weather",
+                    "blockChars": 407
+                  }
+                ]
+              },
+              "tools": {
+                "listChars": 2453,
+                "schemaChars": 18808,
+                "entries": [
+                  {
+                    "name": "read",
+                    "summaryChars": 298,
+                    "schemaChars": 392,
+                    "propertiesCount": 4
+                  },
+                  {
+                    "name": "edit",
+                    "summaryChars": 129,
+                    "schemaChars": 591,
+                    "propertiesCount": 6
+                  },
+                  {
+                    "name": "write",
+                    "summaryChars": 127,
+                    "schemaChars": 313,
+                    "propertiesCount": 3
+                  },
+                  {
+                    "name": "exec",
+                    "summaryChars": 181,
+                    "schemaChars": 1086,
+                    "propertiesCount": 12
+                  },
+                  {
+                    "name": "process",
+                    "summaryChars": 85,
+                    "schemaChars": 961,
+                    "propertiesCount": 12
+                  },
+                  {
+                    "name": "browser",
+                    "summaryChars": 1683,
+                    "schemaChars": 2799,
+                    "propertiesCount": 48
+                  },
+                  {
+                    "name": "canvas",
+                    "summaryChars": 106,
+                    "schemaChars": 661,
+                    "propertiesCount": 18
+                  },
+                  {
+                    "name": "nodes",
+                    "summaryChars": 122,
+                    "schemaChars": 1800,
+                    "propertiesCount": 37
+                  },
+                  {
+                    "name": "cron",
+                    "summaryChars": 2689,
+                    "schemaChars": 690,
+                    "propertiesCount": 13
+                  },
+                  {
+                    "name": "message",
+                    "summaryChars": 89,
+                    "schemaChars": 4872,
+                    "propertiesCount": 91
+                  },
+                  {
+                    "name": "tts",
+                    "summaryChars": 152,
+                    "schemaChars": 223,
+                    "propertiesCount": 2
+                  },
+                  {
+                    "name": "gateway",
+                    "summaryChars": 464,
+                    "schemaChars": 497,
+                    "propertiesCount": 12
+                  },
+                  {
+                    "name": "agents_list",
+                    "summaryChars": 118,
+                    "schemaChars": 33,
+                    "propertiesCount": 0
+                  },
+                  {
+                    "name": "sessions_list",
+                    "summaryChars": 54,
+                    "schemaChars": 212,
+                    "propertiesCount": 4
+                  },
+                  {
+                    "name": "sessions_history",
+                    "summaryChars": 36,
+                    "schemaChars": 161,
+                    "propertiesCount": 3
+                  },
+                  {
+                    "name": "sessions_send",
+                    "summaryChars": 84,
+                    "schemaChars": 273,
+                    "propertiesCount": 5
+                  },
+                  {
+                    "name": "sessions_yield",
+                    "summaryChars": 97,
+                    "schemaChars": 60,
+                    "propertiesCount": 1
+                  },
+                  {
+                    "name": "sessions_spawn",
+                    "summaryChars": 198,
+                    "schemaChars": 1179,
+                    "propertiesCount": 17
+                  },
+                  {
+                    "name": "subagents",
+                    "summaryChars": 105,
+                    "schemaChars": 191,
+                    "propertiesCount": 4
+                  },
+                  {
+                    "name": "session_status",
+                    "summaryChars": 207,
+                    "schemaChars": 89,
+                    "propertiesCount": 2
+                  },
+                  {
+                    "name": "web_search",
+                    "summaryChars": 175,
+                    "schemaChars": 1084,
+                    "propertiesCount": 9
+                  },
+                  {
+                    "name": "web_fetch",
+                    "summaryChars": 129,
+                    "schemaChars": 374,
+                    "propertiesCount": 3
+                  },
+                  {
+                    "name": "memory_search",
+                    "summaryChars": 334,
+                    "schemaChars": 139,
+                    "propertiesCount": 3
+                  },
+                  {
+                    "name": "memory_get",
+                    "summaryChars": 151,
+                    "schemaChars": 128,
+                    "propertiesCount": 3
+                  }
+                ]
+              }
+            },
+            "stopReason": "stop"
+          }
+        },
+        "execution_trace": {
+          "turns": [
+            {
+              "turn_index": 0,
+              "role": "assistant",
+              "content": "\n\nLet me start by reading the query and context files.",
+              "api_call_index": 0,
+              "tokens": {
+                "input": 14974,
+                "output": 122,
+                "total": 15096
+              },
+              "tool_calls": [
+                {
+                  "id": "toolu_bdrk_01JxuXLjLJwKeGNwh6hshcok",
+                  "name": "read",
+                  "arguments": "{\"path\": \"/tmp/isolated_workspace_1091/query.md\"}"
+                },
+                {
+                  "id": "toolu_bdrk_01QEpMVGtqw2gHavuJGCtVCK",
+                  "name": "exec",
+                  "arguments": "{\"command\": \"ls /tmp/isolated_workspace_1091/context/\"}"
+                }
+              ]
+            },
+            {
+              "turn_index": 1,
+              "role": "tool",
+              "tool_results": [
+                {
+                  "tool_call_id": "toolubdrk01JxuXLjLJwKeGNwh6hshcok",
+                  "content": "## Query Description\n\n**Task Background**:\nYou are an AI researcher reproducing the core algorithms from the paper \"No Task Left Behind: Isotropic Model Merging\". This paper proposes a merging method that smooths the singular value spectrum of model parameters via SVD (Singular Value Decomposition) to address interference problems in multi-task model merging.\n\n**Task Objective**:\nThe context provides a code template `merging_interface.py` and a paper summary. Based on the function signatures in `merging_interface.py`, **fill in the missing code** to implement the two core algorithms from the paper:\n\n1.  **Iso-C (Algorithm 1)**: Isotropic Merging in Common Subspace.\n2.  **Iso-CTS (Algorithm 2)**: Isotropic Merging with Common and Task-Specific Subspaces.\n\n**Core Implementation Requirements**:\n1.  **Interface-based Programming**:\n    *   Please strictly follow the input/output definitions of `iso_c_merging` and `iso_cts_merging`.\n    *   Do not modify the function signatures.\n    *   Do not include file read/save logic (File I/O); focus only on tensor computation.\n\n2.  **Dimension Handling Strategy (Important)**:\n    *   **2D Weight Matrices (Weight Matrix)**: Apply the SVD merging algorithm from the paper.\n    *   **0D/1D Tensors (Bias, LayerNorm)**: Do not apply SVD. Directly use **Task Arithmetic (Mean)**, i.e., compute the mean of all task vectors, then multiply by scaling coefficient $\\alpha$ and add back to the pre-trained weights.\n\n3.  **Algorithm Details**:\n    *   **Iso-C**:\n        *   Compute the SVD of the Task Matrix sum ($\\Delta_{TA}$).\n        *   Compute the mean of the singular values $\\bar{\\sigma}$.\n        *   Reconstruct the update matrix using $\\bar{\\sigma}$: $\\Delta_{new} = \\alpha \\cdot \\bar{\\sigma} \\cdot (U V^\\top)$.\n        *   Recommended Scaling Coefficient $\\alpha = 1.3$ (default parameter).\n    *   **Iso-CTS**:\n        *   Extract the Common Subspace.\n        *   Project each task onto the Orthogonal Complement of the common subspace to extract task-specific directions.\n        *   Concatenate the common basis and all task-specific bases.\n        *   **Key Step**: Apply **Whitening (Orthogonalization)** to the concatenated basis to ensure orthogonality.\n        *   Compute the isotropic factor and reconstruct.\n        *   Recommended Scaling Coefficient $\\alpha = 1.4$ (default parameter).\n\n**Output Format**:\nPlease save the completed code as `merging_interface.py`.\n",
+                  "is_error": false
+                },
+                {
+                  "tool_call_id": "toolubdrk01QEpMVGtqw2gHavuJGCtVCK",
+                  "content": "isotropic.pdf\nisotropic_paper_summary.md\nmerging_interface.py\nset_up_dummy_data.py",
+                  "is_error": false
+                }
+              ]
+            },
+            {
+              "turn_index": 2,
+              "role": "assistant",
+              "content": "",
+              "api_call_index": 1,
+              "tokens": {
+                "input": 15874,
+                "output": 176,
+                "total": 16050
+              },
+              "tool_calls": [
+                {
+                  "id": "toolu_bdrk_01CbQGJ7TF7goQg7AP7bM1Tp",
+                  "name": "read",
+                  "arguments": "{\"path\": \"/tmp/isolated_workspace_1091/context/merging_interface.py\"}{\"path\": \"/tmp/isolated_workspace_1091/context/isotropic_paper_summary.md\"}"
+                },
+                {
+                  "id": "toolu_bdrk_01RJMaDjPZAAoaK7WvjN3Wmb",
+                  "name": "read",
+                  "arguments": "{\"path\": \"/tmp/isolated_workspace_1091/context/set_up_dummy_data.py\"}"
+                }
+              ]
+            },
+            {
+              "turn_index": 3,
+              "role": "tool",
+              "tool_results": [
+                {
+                  "tool_call_id": "toolubdrk01KDoVQND9BBR8eZSYFWtrhU",
+                  "content": "# --- START OF FILE merging_interface.py ---\r\nimport torch\r\nfrom typing import List, Dict\r\n\r\n\"\"\"\r\nAssignment: Isotropic Model Merging Implementation\r\nPlease implement the two functions below corresponding to Iso-C and Iso-CTS algorithms.\r\n\r\nConstraints:\r\n1. Input: \r\n   - ptm_state_dict: Dictionary of the pre-trained model weights.\r\n   - ft_state_dicts: List of dictionaries, each containing a fine-tuned model's weights.\r\n   - parameters: Hyperparameters (alpha, scaling coefficient, etc).\r\n   \r\n2. Logic:\r\n   - Calculate Task Vectors: tau_i = theta_i - theta_0\r\n   - Apply SVD-based merging ONLY on 2D parameter tensors (e.g., Linear weights).\r\n   - Apply simple Task Arithmetic (Average) on 0D/1D parameter tensors (e.g., Bias, LayerNorm).\r\n   - Return the merged state_dict.\r\n\r\n3. Do NOT implement file I/O. Focus only on the tensor operations.\r\n\"\"\"\r\n\r\ndef iso_c_merging(\r\n    ptm_state_dict: Dict[str, torch.Tensor],\r\n    ft_state_dicts: List[Dict[str, torch.Tensor]],\r\n    alpha: float = 1.3\r\n) -> Dict[str, torch.Tensor]:\r\n    \"\"\"\r\n    Algorithm 1: Isotropic Merging in Common Subspace (Iso-C)\r\n    \r\n    Args:\r\n        ptm_state_dict: Pre-trained model weights\r\n        ft_state_dicts: List of fine-tuned model weights\r\n        alpha: Scaling coefficient\r\n        \r\n    Returns:\r\n        merged_state_dict: The final merged model weights\r\n    \"\"\"\r\n    # TODO: Implement Iso-C here\r\n    pass\r\n\r\n\r\ndef iso_cts_merging(\r\n    ptm_state_dict: Dict[str, torch.Tensor],\r\n    ft_state_dicts: List[Dict[str, torch.Tensor]],\r\n    alpha: float = 1.4,\r\n    common_ratio: float = 0.8\r\n) -> Dict[str, torch.Tensor]:\r\n    \"\"\"\r\n    Algorithm 2: Isotropic Merging with Common and Task-Specific Subspaces (Iso-CTS)\r\n    \r\n    Args:\r\n        ptm_state_dict: Pre-trained model weights\r\n        ft_state_dicts: List of fine-tuned model weights\r\n        alpha: Scaling coefficient\r\n        common_ratio: The ratio of dimensions allocated to the common subspace (k/r)\r\n        \r\n    Returns:\r\n        merged_state_dict: The final merged model weights\r\n    \"\"\"\r\n    # TODO: Implement Iso-CTS here\r\n    pass\r\n# --- END OF FILE merging_interface.py ---",
+                  "is_error": false
+                },
+                {
+                  "tool_call_id": "toolubdrk01CbQGJ7TF7goQg7AP7bM1Tp",
+                  "content": "# Paper Summary: No Task Left Behind - Isotropic Model Merging\r\n\r\n**Title:** No Task Left Behind: Isotropic Model Merging with Common and Task-Specific Subspaces  \r\n**Authors:** Daniel Marczak et al.  \r\n**Source:** arXiv:2502.04959v3 [cs.LG] 11 Jun 2025\r\n\r\n## 1. Introduction & Problem Definition\r\n\r\nThe paper proposes a new framework for **Model Merging**, specifically focusing on merging multiple task-specific models fine-tuned from a shared pre-trained model into a single multi-task model without additional training.\r\n\r\n### 1.1 Notation\r\n*   $\\theta_0$: Weights of the **pre-trained model**.\r\n*   $\\theta_t$: Weights of the fine-tuned model for task $t$ ($t = 1, \\dots, T$).\r\n*   $\\Delta_t = \\theta_t - \\theta_0$: **Task Matrix** (or Task Vector) for task $t$.\r\n*   $\\theta_M$: Weights of the merged model.\r\n*   **Layer-wise Application**: The methods described are applied layer-by-layer. The notation refers to a specific layer's weight matrix $W \\in \\mathbb{R}^{m \\times n}$.\r\n\r\n### 1.2 Motivation\r\nExisting methods like Task Arithmetic (TA) simply sum the task vectors ($\\Delta_{TA} = \\sum \\Delta_t$). The authors find that:\r\n1.  **Cosine Similarity** between task vectors does not correlate well with merging performance.\r\n2.  **Subspace Alignment Ratio (SAR)** *does* correlate strongly with performance. SAR measures how well the principal directions of individual tasks align with the merged model.\r\n3.  TA results in a skewed singular value spectrum dominated by a few components, underrepresenting some tasks.\r\n4.  **Solution**: Flattening the singular value spectrum (**Isotropic Merging**) improves alignment and performance.\r\n\r\n---\r\n\r\n## 2. Method 1: Isotropic Merging in Common Subspace (Iso-C)\r\n\r\n**Core Idea**: Replace the skewed singular values of the summed task matrix with a uniform (isotropic) value equal to the average singular value.\r\n\r\n### Algorithm Steps (Per Layer)\r\n\r\n**Input**: Task matrices $\\Delta_1, \\dots, \\Delta_T$ where $\\Delta_t \\in \\mathbb{R}^{m \\times n}$.\r\n\r\n1.  **Sum Task Matrices**:\r\n    $$ \\Delta_{TA} = \\sum_{t=1}^{T} \\Delta_t $$\r\n\r\n2.  **SVD Decomposition**:\r\n    Compute the SVD of the summed matrix:\r\n    $$ \\Delta_{TA} = U \\Sigma V^\\top $$\r\n    Where $U \\in \\mathbb{R}^{m \\times r}$, $\\Sigma \\in \\mathbb{R}^{r \\times r}$, $V \\in \\mathbb{R}^{n \\times r}$, and $r$ is the rank.\r\n\r\n3.  **Calculate Isotropic Factor ($\\bar{\\sigma}$)**:\r\n    Compute the average of the singular values $\\{\\sigma_i\\}$:\r\n    $$ \\bar{\\sigma} = \\frac{1}{r} \\sum_{i=1}^{r} \\sigma_i $$\r\n\r\n4.  **Reconstruct Matrix**:\r\n    Create the merged update matrix using the isotropic scaling factor:\r\n    $$ \\Delta_{\\text{Iso-C}} = \\bar{\\sigma} U V^\\top $$\r\n\r\n5.  **Final Merged Weights**:\r\n    $$ \\theta_{\\text{Iso-C}} = \\theta_0 + \\alpha \\Delta_{\\text{Iso-C}} $$\r\n    Where $\\alpha$ is a scaling coefficient (hyperparameter).\r\n\r\n---\r\n\r\n## 3. Method 2: Isotropic Merging with Common and Task-Specific Subspaces (Iso-CTS)\r\n\r\n**Core Idea**: Iso-C relies only on the \"Common Subspace\" defined by $\\Delta_{TA}$. Iso-CTS explicitly adds \"Task-Specific Subspaces\" (directions orthogonal to the common subspace) to ensure no task is left behind.\r\n\r\n### Algorithm Steps (Per Layer)\r\n\r\n**Input**: Task matrices $\\Delta_1, \\dots, \\Delta_T$, Pre-trained $\\theta_0$, Hyperparameters $k$ (common dim) and $\\alpha$.\r\n\r\n1.  **Common Subspace Extraction**:\r\n    *   Compute $\\Delta_{TA} = \\sum \\Delta_t$.\r\n    *   Compute SVD: $\\Delta_{TA} = U \\Sigma V^\\top$.\r\n    *   Retain the **top-k** singular vectors/values:\r\n        *   $U^{1:k} = [u_1 | \\dots | u_k]$\r\n        *   $V^{1:k} = [v_1 | \\dots | v_k]$\r\n        *   $\\sigma^{cm} = \\text{diag}(\\Sigma)_{1:k}$ (Common singular values).\r\n\r\n2.  **Task-Specific Projection**:\r\n    For each task $t = 1 \\dots T$:\r\n    *   Project $\\Delta_t$ onto the subspace **orthogonal** to the common subspace $U^{1:k}$:\r\n        $$ \\overline{\\Delta}_t = \\Delta_t - U^{1:k} (U^{1:k})^\\top \\Delta_t $$\r\n    *   Compute SVD of the residual: $\\overline{\\Delta}_t = \\overline{U}_t \\overline{\\Sigma}_t \\overline{V}_t^\\top$.\r\n    *   Retain top **s** components, where $s = \\lfloor \\frac{r - k}{T} \\rfloor$:\r\n        *   $\\overline{U}_t^{1:s}$, $\\overline{V}_t^{1:s}$, and $\\sigma_t^{ts} = \\text{diag}(\\overline{\\Sigma}_t)_{1:s}$.\r\n\r\n3.  **Combine Subspaces**:\r\n    Concatenate the common basis and all task-specific bases:\r\n    $$ U_* = [ U^{1:k} | \\overline{U}_1^{1:s} | \\dots | \\overline{U}_T^{1:s} ] \\in \\mathbb{R}^{m \\times r} $$\r\n    $$ V_* = [ V^{1:k} | \\overline{V}_1^{1:s} | \\dots | \\overline{V}_T^{1:s} ] \\in \\mathbb{R}^{n \\times r} $$\r\n\r\n4.  **Orthogonalization (Whitening)**:\r\n    Since the concatenated bases $U_*$ and $V_*$ are not necessarily orthogonal, apply whitening via SVD:\r\n    *   Compute SVD of $U_*$: $U_* = P_{U_*} \\Sigma_{U_*} Q_{U_*}^\\top$.\r\n    *   Update $U_* \\leftarrow P_{U_*} Q_{U_*}^\\top$.\r\n    *   Compute SVD of $V_*$: $V_* = P_{V_*} \\Sigma_{V_*} Q_{V_*}^\\top$.\r\n    *   Update $V_* \\leftarrow P_{V_*} Q_{V_*}^\\top$.\r\n\r\n5.  **Calculate Isotropic Factor ($\\bar{\\sigma}$)**:\r\n    Average all selected singular values (both common and task-specific):\r\n    $$ \\bar{\\sigma} = \\frac{1}{r} \\left( \\sum_{i=1}^k \\sigma^{cm}_i + \\sum_{t=1}^T \\sum_{i=1}^s \\sigma^{ts}_{t,i} \\right) $$\r\n\r\n6.  **Reconstruct Matrix**:\r\n    $$ \\Delta_{\\text{Iso-CTS}} = \\bar{\\sigma} U_* V_*^\\top $$\r\n\r\n7.  **Final Merged Weights**:\r\n    $$ \\theta_{\\text{Iso-CTS}} = \\theta_0 + \\alpha \\Delta_{\\text{Iso-CTS}} $$\r\n\r\n---\r\n\r\n## 4. Implementation Details & Hyperparameters\r\n\r\n### 4.1 Implementation Constraints (Appendix C.2)\r\n*   **2D Matrices**: The SVD-based methods (Iso-C, Iso-CTS) are applied **only to 2D weight matrices** (e.g., Linear layers, Conv2d reshaped).\r\n*   **1D Vectors**: For parameters that are vectors (e.g., Bias terms `bias`, LayerNorm parameters `weight` and `bias`), **standard averaging (Task Arithmetic)** is used instead of SVD.\r\n    *   Equation: $\\theta_{merged}^{(1D)} = \\theta_0^{(1D)} + \\alpha \\sum \\Delta_t^{(1D)}$.\r\n\r\n### 4.2 Hyperparameters\r\n*   **Common Subspace Ratio ($k/r$)**:\r\n    *   For Iso-CTS, the optimal fraction of subspace assigned to the common subspace is **0.8**.\r\n    *   $k = \\lfloor 0.8 \\times \\text{rank} \\rfloor$.\r\n    *   $s = \\lfloor (r - k) / T \\rfloor$.\r\n*   **Scaling Coefficient ($\\alpha$)**:\r\n    *   The paper suggests optimal $\\alpha$ values in **Table 5**.\r\n    *   **Iso-C**: $\\alpha \\approx 1.3$ (range 0.8 - 1.5 depending on model/tasks).\r\n    *   **Iso-CTS**: $\\alpha \\approx 1.4$ (range 1.1 - 1.9).\r\n    *   General recommendation: Iso methods are more robust to $\\alpha$ than TA.\r\n\r\n### 4.3 Computational Complexity (Appendix B)\r\n*   **Iso-C**: $\\mathcal{O}(L n^3)$ (One SVD per layer).\r\n*   **Iso-CTS**: $\\mathcal{O}(T L n^3)$ (SVD on $\\Delta_{TA}$ + SVD on each of $T$ tasks + 2 small SVDs for whitening).\r\n\r\n---\r\n\r\n## 5. Key Differences Summary\r\n\r\n| Feature | Task Arithmetic (TA) | Iso-C | Iso-CTS |\r\n| :--- | :--- | :--- | :--- |\r\n| **Formula** | Summation | SVD + Flatten Spectrum | SVD + Projection + Flatten |\r\n| **Spectrum** | Skewed (Dominant directions) | Flat (Isotropic) | Flat (Isotropic) |\r\n| **Subspaces** | Implicitly Common | Common Only | Common + Task-Specific |\r\n| **Handling 1D Params** | Sum | Sum | Sum |\r\n| **Complexity** | Low | Medium | High |",
+                  "is_error": false
+                },
+                {
+                  "tool_call_id": "toolubdrk01RJMaDjPZAAoaK7WvjN3Wmb",
+                  "content": "# setup_dummy_data.py\r\nimport torch\r\nimport torch.nn as nn\r\nimport os\r\nimport shutil\r\n\r\n# 1. 定义一个简单的 Tiny Model\r\n# 包含 Linear (2D weight + 1D bias) 和 LayerNorm (1D weight + 1D bias)\r\n# 确保能测试到论文中关于不同维度处理的要求\r\nclass TinyModel(nn.Module):\r\n    def __init__(self):\r\n        super().__init__()\r\n        self.fc1 = nn.Linear(10, 8)  # Weight: [8, 10], Bias: [8]\r\n        self.ln = nn.LayerNorm(8)    # Weight: [8], Bias: [8]\r\n        self.fc2 = nn.Linear(8, 4)   # Weight: [4, 8], Bias: [4]\r\n\r\n    def forward(self, x):\r\n        return self.fc2(self.ln(self.fc1(x)))\r\n\r\ndef generate_data(root_dir=\"./mock_data\"):\r\n    # 清理旧数据\r\n    if os.path.exists(root_dir):\r\n        shutil.rmtree(root_dir)\r\n    os.makedirs(root_dir)\r\n\r\n    model_name = \"Tiny-ViT\"\r\n    datasets = [\"Task_A\", \"Task_B\", \"Task_C\"]\r\n    \r\n    base_path = os.path.join(root_dir, \"checkpoints\", model_name)\r\n    os.makedirs(base_path, exist_ok=True)\r\n\r\n    # 1. 生成 Pre-trained Model (Zero-shot)\r\n    torch.manual_seed(42)\r\n    ptm = TinyModel()\r\n    ptm_path = os.path.join(base_path, \"zeroshot.pt\")\r\n    torch.save(ptm.state_dict(), ptm_path)\r\n    print(f\"Generated Pre-trained model at {ptm_path}\")\r\n\r\n    # 2. 生成各个 Task 的 Fine-tuned Models\r\n    # 通过在 PTM 基础上加随机噪声来模拟微调\r\n    for task in datasets:\r\n        task_path = os.path.join(base_path, task)\r\n        os.makedirs(task_path, exist_ok=True)\r\n        \r\n        # 模拟微调：加一些噪声\r\n        ft_state_dict = {}\r\n        for k, v in ptm.state_dict().items():\r\n            noise = torch.randn_like(v) * 0.1\r\n            ft_state_dict[k] = v + noise\r\n        \r\n        save_path = os.path.join(task_path, \"finetuned.pt\")\r\n        torch.save(ft_state_dict, save_path)\r\n        print(f\"Generated Fine-tuned model for {task} at {save_path}\")\r\n\r\n    print(\"\\n✅ Dummy data generation complete!\")\r\n    print(f\"Root Directory: {os.path.abspath(root_dir)}\")\r\n\r\nif __name__ == \"__main__\":\r\n    generate_data()",
+                  "is_error": false
+                }
+              ]
+            },
+            {
+              "turn_index": 4,
+              "role": "assistant",
+              "content": "Now I have a clear picture of both algorithms. Let me implement them.",
+              "api_call_index": 2,
+              "tokens": {
+                "input": 20316,
+                "output": 2397,
+                "total": 22713
+              },
+              "tool_calls": [
+                {
+                  "id": "toolu_bdrk_015Yd6mZgatduBZ4bYYhBsy9",
+                  "name": "write",
+                  "arguments": "{\"path\": \"/tmp/isolated_workspace_1091/merging_interface.py\", \"content\": \"# --- START OF FILE merging_interface.py ---\\nimport torch\\nfrom typing import List, Dict\\n\\n\\\"\\\"\\\"\\nAssignment: Isotropic Model Merging Implementation\\nPlease implement the two functions below corresponding to Iso-C and Iso-CTS algorithms.\\n\\nConstraints:\\n1. Input: \\n   - ptm_state_dict: Dictionary of the pre-trained model weights.\\n   - ft_state_dicts: List of dictionaries, each containing a fine-tuned model's weights.\\n   - parameters: Hyperparameters (alpha, scaling coefficient, etc).\\n   \\n2. Logic:\\n   - Calculate Task Vectors: tau_i = theta_i - theta_0\\n   - Apply SVD-based merging ONLY on 2D parameter tensors (e.g., Linear weights).\\n   - Apply simple Task Arithmetic (Average) on 0D/1D parameter tensors (e.g., Bias, LayerNorm).\\n   - Return the merged state_dict.\\n\\n3. Do NOT implement file I/O. Focus only on the tensor operations.\\n\\\"\\\"\\\"\\n\\ndef iso_c_merging(\\n    ptm_state_dict: Dict[str, torch.Tensor],\\n    ft_state_dicts: List[Dict[str, torch.Tensor]],\\n    alpha: float = 1.3\\n) -> Dict[str, torch.Tensor]:\\n    \\\"\\\"\\\"\\n    Algorithm 1: Isotropic Merging in Common Subspace (Iso-C)\\n    \\n    Args:\\n        ptm_state_dict: Pre-trained model weights\\n        ft_state_dicts: List of fine-tuned model weights\\n        alpha: Scaling coefficient\\n        \\n    Returns:\\n        merged_state_dict: The final merged model weights\\n    \\\"\\\"\\\"\\n    T = len(ft_state_dicts)\\n    merged_state_dict = {}\\n\\n    for key in ptm_state_dict:\\n        theta_0 = ptm_state_dict[key]\\n\\n        # Compute task vectors: delta_t = theta_t - theta_0\\n        task_vectors = [ft[key] - theta_0 for ft in ft_state_dicts]\\n\\n        if theta_0.dim() <= 1:\\n            # 0D/1D tensors (bias, LayerNorm): Task Arithmetic (mean of task vectors * alpha)\\n            delta_ta = torch.stack(task_vectors).sum(dim=0)\\n            merged_state_dict[key] = theta_0 + alpha * (delta_ta / T)\\n        else:\\n            # 2D weight matrices: apply SVD-based isotropic merging\\n\\n            # Step 1: Sum task matrices\\n            delta_ta = torch.stack(task_vectors).sum(dim=0)\\n\\n            # Step 2: SVD decomposition\\n            U, S, Vh = torch.linalg.svd(delta_ta, full_matrices=False)\\n            # U: (m, r), S: (r,), Vh: (r, n)  where r = min(m, n)\\n\\n            # Step 3: Calculate isotropic factor (mean of singular values)\\n            sigma_bar = S.mean()\\n\\n            # Step 4: Reconstruct with isotropic spectrum\\n            # delta_iso = sigma_bar * U @ V^T\\n            delta_iso = sigma_bar * (U @ Vh)\\n\\n            # Step 5: Final merged weights\\n            merged_state_dict[key] = theta_0 + alpha * delta_iso\\n\\n    return merged_state_dict\\n\\n\\ndef iso_cts_merging(\\n    ptm_state_dict: Dict[str, torch.Tensor],\\n    ft_state_dicts: List[Dict[str, torch.Tensor]],\\n    alpha: float = 1.4,\\n    common_ratio: float = 0.8\\n) -> Dict[str, torch.Tensor]:\\n    \\\"\\\"\\\"\\n    Algorithm 2: Isotropic Merging with Common and Task-Specific Subspaces (Iso-CTS)\\n    \\n    Args:\\n        ptm_state_dict: Pre-trained model weights\\n        ft_state_dicts: List of fine-tuned model weights\\n        alpha: Scaling coefficient\\n        common_ratio: The ratio of dimensions allocated to the common subspace (k/r)\\n        \\n    Returns:\\n        merged_state_dict: The final merged model weights\\n    \\\"\\\"\\\"\\n    T = len(ft_state_dicts)\\n    merged_state_dict = {}\\n\\n    for key in ptm_state_dict:\\n        theta_0 = ptm_state_dict[key]\\n\\n        # Compute task vectors\\n        task_vectors = [ft[key] - theta_0 for ft in ft_state_dicts]\\n\\n        if theta_0.dim() <= 1:\\n            # 0D/1D tensors: Task Arithmetic (mean of task vectors * alpha)\\n            delta_ta = torch.stack(task_vectors).sum(dim=0)\\n            merged_state_dict[key] = theta_0 + alpha * (delta_ta / T)\\n        else:\\n            # 2D weight matrices: apply Iso-CTS algorithm\\n\\n            # Step 1: Common Subspace Extraction\\n            delta_ta = torch.stack(task_vectors).sum(dim=0)\\n            U_ta, S_ta, Vh_ta = torch.linalg.svd(delta_ta, full_matrices=False)\\n            # r = rank (number of singular values)\\n            r = S_ta.shape[0]\\n\\n            # Determine k (common subspace dimension) and s (per-task specific dimension)\\n            k = max(1, int(common_ratio * r))\\n            s = max(0, (r - k) // T)\\n\\n            # Top-k common subspace\\n            U_common = U_ta[:, :k]        # (m, k)\\n            Vh_common = Vh_ta[:k, :]       # (k, n)\\n            V_common = Vh_common.T         # (n, k)\\n            sigma_common = S_ta[:k]        # (k,)\\n\\n            # Step 2: Task-Specific Projection\\n            U_task_list = []\\n            V_task_list = []\\n            sigma_task_list = []\\n\\n            for t in range(T):\\n                delta_t = task_vectors[t]\\n\\n                # Project onto orthogonal complement of common subspace\\n                # delta_bar_t = delta_t - U_common @ U_common^T @ delta_t\\n                proj = U_common @ (U_common.T @ delta_t)\\n                delta_bar_t = delta_t - proj\\n\\n                if s > 0:\\n                    # SVD of residual\\n                    U_res, S_res, Vh_res = torch.linalg.svd(delta_bar_t, full_matrices=False)\\n\\n                    # Retain top-s components\\n                    actual_s = min(s, S_res.shape[0])\\n                    U_task_list.append(U_res[:, :actual_s])        # (m, actual_s)\\n                    V_task_list.append(Vh_res[:actual_s, :].T)     # (n, actual_s)\\n                    sigma_task_list.append(S_res[:actual_s])        # (actual_s,)\\n\\n            # Step 3: Combine Subspaces\\n            # U_* = [U_common | U_task_1 | ... | U_task_T]\\n            # V_* = [V_common | V_task_1 | ... | V_task_T]\\n            U_parts = [U_common]\\n            V_parts = [V_common]\\n            all_sigmas = [sigma_common]\\n\\n            for i in range(len(U_task_list)):\\n                U_parts.append(U_task_list[i])\\n                V_parts.append(V_task_list[i])\\n                all_sigmas.append(sigma_task_list[i])\\n\\n            U_star = torch.cat(U_parts, dim=1)  # (m, r_total)\\n            V_star = torch.cat(V_parts, dim=1)  # (n, r_total)\\n            all_sigma = torch.cat(all_sigmas)    # (r_total,)\\n\\n            # Step 4: Orthogonalization (Whitening) via SVD\\n            # Whiten U_*\\n            P_u, Sigma_u, Qh_u = torch.linalg.svd(U_star, full_matrices=False)\\n            U_star = P_u @ Qh_u  # Orthogonalized U_*\\n\\n            # Whiten V_*\\n            P_v, Sigma_v, Qh_v = torch.linalg.svd(V_star, full_matrices=False)\\n            V_star = P_v @ Qh_v  # Orthogonalized V_*\\n\\n            # Step 5: Calculate Isotropic Factor\\n            r_total = all_sigma.shape[0]\\n            sigma_bar = all_sigma.sum() / r_total\\n\\n            # Step 6: Reconstruct Matrix\\n            delta_iso_cts = sigma_bar * (U_star @ V_star.T)\\n\\n            # Step 7: Final Merged Weights\\n            merged_state_dict[key] = theta_0 + alpha * delta_iso_cts\\n\\n    return merged_state_dict\\n# --- END OF FILE merging_interface.py ---\\n\"}"
+                }
+              ]
+            },
+            {
+              "turn_index": 5,
+              "role": "tool",
+              "tool_results": [
+                {
+                  "tool_call_id": "toolubdrk015Yd6mZgatduBZ4bYYhBsy9",
+                  "content": "Successfully wrote 6861 bytes to /tmp/isolated_workspace_1091/merging_interface.py",
+                  "is_error": false
+                }
+              ]
+            },
+            {
+              "turn_index": 6,
+              "role": "assistant",
+              "content": "Now let me verify it runs correctly with the dummy data:",
+              "api_call_index": 3,
+              "tokens": {
+                "input": 22749,
+                "output": 545,
+                "total": 23294
+              },
+              "tool_calls": [
+                {
+                  "id": "toolu_bdrk_01Nujj6RSmWdxk1ftGzs5Knt",
+                  "name": "exec",
+                  "arguments": "{\"command\": \"cd /tmp/isolated_workspace_1091 && python3 -c \\\"\\n# Generate dummy data first\\nexec(open('context/set_up_dummy_data.py').read())\\ngenerate_data('./mock_data')\\n\\nimport torch\\nfrom merging_interface import iso_c_merging, iso_cts_merging\\n\\n# Load data\\nptm = torch.load('./mock_data/checkpoints/Tiny-ViT/zeroshot.pt', weights_only=True)\\nft_dicts = []\\nfor task in ['Task_A', 'Task_B', 'Task_C']:\\n    ft = torch.load(f'./mock_data/checkpoints/Tiny-ViT/{task}/finetuned.pt', weights_only=True)\\n    ft_dicts.append(ft)\\n\\nprint('=== Iso-C Merging ===')\\nmerged_c = iso_c_merging(ptm, ft_dicts, alpha=1.3)\\nfor k, v in merged_c.items():\\n    print(f'  {k}: shape={v.shape}, mean={v.mean():.6f}, std={v.std():.6f}')\\n\\nprint()\\nprint('=== Iso-CTS Merging ===')\\nmerged_cts = iso_cts_merging(ptm, ft_dicts, alpha=1.4)\\nfor k, v in merged_cts.items():\\n    print(f'  {k}: shape={v.shape}, mean={v.mean():.6f}, std={v.std():.6f}')\\n\\n# Verify shapes match\\nprint()\\nfor k in ptm:\\n    assert merged_c[k].shape == ptm[k].shape, f'Shape mismatch in Iso-C for {k}'\\n    assert merged_cts[k].shape == ptm[k].shape, f'Shape mismatch in Iso-CTS for {k}'\\nprint('✅ All shapes match. Both algorithms executed successfully.')\\n\\\"\\n\"}"
+                }
+              ]
+            },
+            {
+              "turn_index": 7,
+              "role": "tool",
+              "tool_results": [
+                {
+                  "tool_call_id": "toolubdrk01Nujj6RSmWdxk1ftGzs5Knt",
+                  "content": "Generated Pre-trained model at ./mock_data/checkpoints/Tiny-ViT/zeroshot.pt\nGenerated Fine-tuned model for Task_A at ./mock_data/checkpoints/Tiny-ViT/Task_A/finetuned.pt\nGenerated Fine-tuned model for Task_B at ./mock_data/checkpoints/Tiny-ViT/Task_B/finetuned.pt\nGenerated Fine-tuned model for Task_C at ./mock_data/checkpoints/Tiny-ViT/Task_C/finetuned.pt\n\n✅ Dummy data generation complete!\nRoot Directory: /tmp/isolated_workspace_1091/mock_data\nGenerated Pre-trained model at ./mock_data/checkpoints/Tiny-ViT/zeroshot.pt\nGenerated Fine-tuned model for Task_A at ./mock_data/checkpoints/Tiny-ViT/Task_A/finetuned.pt\nGenerated Fine-tuned model for Task_B at ./mock_data/checkpoints/Tiny-ViT/Task_B/finetuned.pt\nGenerated Fine-tuned model for Task_C at ./mock_data/checkpoints/Tiny-ViT/Task_C/finetuned.pt\n\n✅ Dummy data generation complete!\nRoot Directory: /tmp/isolated_workspace_1091/mock_data\n=== Iso-C Merging ===\n  fc1.weight: shape=torch.Size([8, 10]), mean=-0.009890, std=0.268529\n  fc1.bias: shape=torch.Size([8]), mean=-0.074697, std=0.204000\n  ln.weight: shape=torch.Size([8]), mean=1.000278, std=0.056362\n  ln.bias: shape=torch.Size([8]), mean=-0.014794, std=0.051318\n  fc2.weight: shape=torch.Size([4, 8]), mean=-0.093147, std=0.308537\n  fc2.bias: shape=torch.Size([4]), mean=-0.072870, std=0.140891\n\n=== Iso-CTS Merging ===\n  fc1.weight: shape=torch.Size([8, 10]), mean=0.016563, std=0.290355\n  fc1.bias: shape=torch.Size([8]), mean=-0.077685, std=0.205721\n  ln.weight: shape=torch.Size([8]), mean=1.000299, std=0.060697\n  ln.bias: shape=torch.Size([8]), mean=-0.015932, std=0.055265\n  fc2.weight: shape=torch.Size([4, 8]), mean=-0.052567, std=0.313497\n  fc2.bias: shape=torch.Size([4]), mean=-0.070886, std=0.143282\n\n✅ All shapes match. Both algorithms executed successfully.",
+                  "is_error": false
+                }
+              ]
+            },
+            {
+              "turn_index": 8,
+              "role": "assistant",
+              "content": "Both algorithms run cleanly. Here's a summary of what's implemented in `merging_interface.py`:\n\n### `iso_c_merging` (Algorithm 1 — Isotropic Merging in Common Subspace)\n1. Computes task vectors Δ_t = θ_t − θ_0 for each fine-tuned model\n2. **For 0D/1D tensors** (bias, LayerNorm): averages the task vectors, scales by α, adds to pretrained weights\n3. **For 2D weight matrices**: sums all task vectors → SVD → replaces the singular value spectrum with the mean σ̄ → reconstructs as α · σ̄ · U·Vᵀ + θ_0\n\n### `iso_cts_merging` (Algorithm 2 — Common + Task-Specific Subspaces)\n1. Same task vector computation and 0D/1D handling as Iso-C\n2. **For 2D matrices**:\n   - Extracts the **common subspace** (top-k singular vectors of ΔTA, where k = ⌊0.8·r⌋)\n   - For each task, projects onto the **orthogonal complement** of the common subspace, then takes top-s singular vectors (s = ⌊(r−k)/T⌋)\n   - **Concatenates** all bases and applies **whitening** (SVD-based orthogonalization) to both U★ and V★\n   - Computes the isotropic factor σ̄ from all collected singular values\n   - Reconstructs as α · σ̄ · U★·V★ᵀ + θ_0",
+              "api_call_index": 4,
+              "tokens": {
+                "input": 24016,
+                "output": 412,
+                "total": 24428
+              }
+            }
+          ],
+          "api_calls": [
+            {
+              "index": 0,
+              "timestamp": "2026-04-18T14:08:58.081625",
+              "duration_ms": 4240,
+              "tokens": {
+                "input": 14974,
+                "output": 122,
+                "total": 15096
+              },
+              "model": "claude-opus-4-6",
+              "response_status": 200
+            },
+            {
+              "index": 1,
+              "timestamp": "2026-04-18T14:09:10.923794",
+              "duration_ms": 12414,
+              "tokens": {
+                "input": 15874,
+                "output": 176,
+                "total": 16050
+              },
+              "model": "claude-opus-4-6",
+              "response_status": 200
+            },
+            {
+              "index": 2,
+              "timestamp": "2026-04-18T14:09:41.133656",
+              "duration_ms": 30189,
+              "tokens": {
+                "input": 20316,
+                "output": 2397,
+                "total": 22713
+              },
+              "model": "claude-opus-4-6",
+              "response_status": 200
+            },
+            {
+              "index": 3,
+              "timestamp": "2026-04-18T14:09:50.542255",
+              "duration_ms": 9201,
+              "tokens": {
+                "input": 22749,
+                "output": 545,
+                "total": 23294
+              },
+              "model": "claude-opus-4-6",
+              "response_status": 200
+            },
+            {
+              "index": 4,
+              "timestamp": "2026-04-18T14:10:02.366159",
+              "duration_ms": 9676,
+              "tokens": {
+                "input": 24016,
+                "output": 412,
+                "total": 24428
+              },
+              "model": "claude-opus-4-6",
+              "response_status": 200
+            }
+          ],
+          "summary": {
+            "total_api_calls": 5,
+            "total_tokens": {
+              "input": 97929,
+              "output": 3652,
+              "cached": 0,
+              "total": 101581
+            },
+            "total_tool_calls": 6,
+            "tool_frequency": {
+              "read": 3,
+              "exec": 2,
+              "write": 1
+            }
+          }
+        }
+      }
+    },
+    {
+      "timestamp": "2026-04-18T14:10:02.728039",
+      "role": "evaluation",
+      "content": "Score: 70/100\n\nComment: ",
+      "attempt": 1,
+      "message_type": "evaluation_result",
+      "metadata": {
+        "score": 70,
+        "passed": false,
+        "report": {
+          "A. File Delivery (10pts)": {
+            "score": 10,
+            "details": {
+              "File exists": "5/5 — merging_interface.py exists",
+              "Code non-empty": "3/3 — Content is non-empty",
+              "Function definitions": "2/2 — Both iso_c_merging and iso_cts_merging present"
+            }
+          },
+          "B. Dynamic Functional Tests (60pts)": {
+            "score": 30,
+            "details": {
+              "Iso-C": "30/30 — Passed (max_diff=5.96e-08)",
+              "Iso-CTS": "0/30 — Output mismatch (max_diff=3.69e-01)"
+            }
+          },
+          "C. Static Code Analysis (30pts)": {
+            "score": 30,
+            "details": {
+              "Iso-C static": "15/15 — Dynamic test passed, automatic full marks",
+              "Iso-CTS static": "15/15 — Orthogonal projection (+5); Concatenation torch.cat (+5); Whitening (SVD x5) (+5)"
+            }
+          },
+          "total_score": 70,
+          "dimension_scores": {
+            "File Delivery": "10/10",
+            "Dynamic Tests": "30/60",
+            "Static Analysis": "30/30"
+          }
+        },
+        "elapsed_seconds": 96.04755091667175
+      }
+    }
+  ],
+  "execution_traces": [
+    {
+      "attempt": 1,
+      "trace": {
+        "turns": [
+          {
+            "turn_index": 0,
+            "role": "assistant",
+            "content": "\n\nLet me start by reading the query and context files.",
+            "api_call_index": 0,
+            "tokens": {
+              "input": 14974,
+              "output": 122,
+              "total": 15096
+            },
+            "tool_calls": [
+              {
+                "id": "toolu_bdrk_01JxuXLjLJwKeGNwh6hshcok",
+                "name": "read",
+                "arguments": "{\"path\": \"/tmp/isolated_workspace_1091/query.md\"}"
+              },
+              {
+                "id": "toolu_bdrk_01QEpMVGtqw2gHavuJGCtVCK",
+                "name": "exec",
+                "arguments": "{\"command\": \"ls /tmp/isolated_workspace_1091/context/\"}"
+              }
+            ]
+          },
+          {
+            "turn_index": 1,
+            "role": "tool",
+            "tool_results": [
+              {
+                "tool_call_id": "toolubdrk01JxuXLjLJwKeGNwh6hshcok",
+                "content": "## Query Description\n\n**Task Background**:\nYou are an AI researcher reproducing the core algorithms from the paper \"No Task Left Behind: Isotropic Model Merging\". This paper proposes a merging method that smooths the singular value spectrum of model parameters via SVD (Singular Value Decomposition) to address interference problems in multi-task model merging.\n\n**Task Objective**:\nThe context provides a code template `merging_interface.py` and a paper summary. Based on the function signatures in `merging_interface.py`, **fill in the missing code** to implement the two core algorithms from the paper:\n\n1.  **Iso-C (Algorithm 1)**: Isotropic Merging in Common Subspace.\n2.  **Iso-CTS (Algorithm 2)**: Isotropic Merging with Common and Task-Specific Subspaces.\n\n**Core Implementation Requirements**:\n1.  **Interface-based Programming**:\n    *   Please strictly follow the input/output definitions of `iso_c_merging` and `iso_cts_merging`.\n    *   Do not modify the function signatures.\n    *   Do not include file read/save logic (File I/O); focus only on tensor computation.\n\n2.  **Dimension Handling Strategy (Important)**:\n    *   **2D Weight Matrices (Weight Matrix)**: Apply the SVD merging algorithm from the paper.\n    *   **0D/1D Tensors (Bias, LayerNorm)**: Do not apply SVD. Directly use **Task Arithmetic (Mean)**, i.e., compute the mean of all task vectors, then multiply by scaling coefficient $\\alpha$ and add back to the pre-trained weights.\n\n3.  **Algorithm Details**:\n    *   **Iso-C**:\n        *   Compute the SVD of the Task Matrix sum ($\\Delta_{TA}$).\n        *   Compute the mean of the singular values $\\bar{\\sigma}$.\n        *   Reconstruct the update matrix using $\\bar{\\sigma}$: $\\Delta_{new} = \\alpha \\cdot \\bar{\\sigma} \\cdot (U V^\\top)$.\n        *   Recommended Scaling Coefficient $\\alpha = 1.3$ (default parameter).\n    *   **Iso-CTS**:\n        *   Extract the Common Subspace.\n        *   Project each task onto the Orthogonal Complement of the common subspace to extract task-specific directions.\n        *   Concatenate the common basis and all task-specific bases.\n        *   **Key Step**: Apply **Whitening (Orthogonalization)** to the concatenated basis to ensure orthogonality.\n        *   Compute the isotropic factor and reconstruct.\n        *   Recommended Scaling Coefficient $\\alpha = 1.4$ (default parameter).\n\n**Output Format**:\nPlease save the completed code as `merging_interface.py`.\n",
+                "is_error": false
+              },
+              {
+                "tool_call_id": "toolubdrk01QEpMVGtqw2gHavuJGCtVCK",
+                "content": "isotropic.pdf\nisotropic_paper_summary.md\nmerging_interface.py\nset_up_dummy_data.py",
+                "is_error": false
+              }
+            ]
+          },
+          {
+            "turn_index": 2,
+            "role": "assistant",
+            "content": "",
+            "api_call_index": 1,
+            "tokens": {
+              "input": 15874,
+              "output": 176,
+              "total": 16050
+            },
+            "tool_calls": [
+              {
+                "id": "toolu_bdrk_01CbQGJ7TF7goQg7AP7bM1Tp",
+                "name": "read",
+                "arguments": "{\"path\": \"/tmp/isolated_workspace_1091/context/merging_interface.py\"}{\"path\": \"/tmp/isolated_workspace_1091/context/isotropic_paper_summary.md\"}"
+              },
+              {
+                "id": "toolu_bdrk_01RJMaDjPZAAoaK7WvjN3Wmb",
+                "name": "read",
+                "arguments": "{\"path\": \"/tmp/isolated_workspace_1091/context/set_up_dummy_data.py\"}"
+              }
+            ]
+          },
+          {
+            "turn_index": 3,
+            "role": "tool",
+            "tool_results": [
+              {
+                "tool_call_id": "toolubdrk01KDoVQND9BBR8eZSYFWtrhU",
+                "content": "# --- START OF FILE merging_interface.py ---\r\nimport torch\r\nfrom typing import List, Dict\r\n\r\n\"\"\"\r\nAssignment: Isotropic Model Merging Implementation\r\nPlease implement the two functions below corresponding to Iso-C and Iso-CTS algorithms.\r\n\r\nConstraints:\r\n1. Input: \r\n   - ptm_state_dict: Dictionary of the pre-trained model weights.\r\n   - ft_state_dicts: List of dictionaries, each containing a fine-tuned model's weights.\r\n   - parameters: Hyperparameters (alpha, scaling coefficient, etc).\r\n   \r\n2. Logic:\r\n   - Calculate Task Vectors: tau_i = theta_i - theta_0\r\n   - Apply SVD-based merging ONLY on 2D parameter tensors (e.g., Linear weights).\r\n   - Apply simple Task Arithmetic (Average) on 0D/1D parameter tensors (e.g., Bias, LayerNorm).\r\n   - Return the merged state_dict.\r\n\r\n3. Do NOT implement file I/O. Focus only on the tensor operations.\r\n\"\"\"\r\n\r\ndef iso_c_merging(\r\n    ptm_state_dict: Dict[str, torch.Tensor],\r\n    ft_state_dicts: List[Dict[str, torch.Tensor]],\r\n    alpha: float = 1.3\r\n) -> Dict[str, torch.Tensor]:\r\n    \"\"\"\r\n    Algorithm 1: Isotropic Merging in Common Subspace (Iso-C)\r\n    \r\n    Args:\r\n        ptm_state_dict: Pre-trained model weights\r\n        ft_state_dicts: List of fine-tuned model weights\r\n        alpha: Scaling coefficient\r\n        \r\n    Returns:\r\n        merged_state_dict: The final merged model weights\r\n    \"\"\"\r\n    # TODO: Implement Iso-C here\r\n    pass\r\n\r\n\r\ndef iso_cts_merging(\r\n    ptm_state_dict: Dict[str, torch.Tensor],\r\n    ft_state_dicts: List[Dict[str, torch.Tensor]],\r\n    alpha: float = 1.4,\r\n    common_ratio: float = 0.8\r\n) -> Dict[str, torch.Tensor]:\r\n    \"\"\"\r\n    Algorithm 2: Isotropic Merging with Common and Task-Specific Subspaces (Iso-CTS)\r\n    \r\n    Args:\r\n        ptm_state_dict: Pre-trained model weights\r\n        ft_state_dicts: List of fine-tuned model weights\r\n        alpha: Scaling coefficient\r\n        common_ratio: The ratio of dimensions allocated to the common subspace (k/r)\r\n        \r\n    Returns:\r\n        merged_state_dict: The final merged model weights\r\n    \"\"\"\r\n    # TODO: Implement Iso-CTS here\r\n    pass\r\n# --- END OF FILE merging_interface.py ---",
+                "is_error": false
+              },
+              {
+                "tool_call_id": "toolubdrk01CbQGJ7TF7goQg7AP7bM1Tp",
+                "content": "# Paper Summary: No Task Left Behind - Isotropic Model Merging\r\n\r\n**Title:** No Task Left Behind: Isotropic Model Merging with Common and Task-Specific Subspaces  \r\n**Authors:** Daniel Marczak et al.  \r\n**Source:** arXiv:2502.04959v3 [cs.LG] 11 Jun 2025\r\n\r\n## 1. Introduction & Problem Definition\r\n\r\nThe paper proposes a new framework for **Model Merging**, specifically focusing on merging multiple task-specific models fine-tuned from a shared pre-trained model into a single multi-task model without additional training.\r\n\r\n### 1.1 Notation\r\n*   $\\theta_0$: Weights of the **pre-trained model**.\r\n*   $\\theta_t$: Weights of the fine-tuned model for task $t$ ($t = 1, \\dots, T$).\r\n*   $\\Delta_t = \\theta_t - \\theta_0$: **Task Matrix** (or Task Vector) for task $t$.\r\n*   $\\theta_M$: Weights of the merged model.\r\n*   **Layer-wise Application**: The methods described are applied layer-by-layer. The notation refers to a specific layer's weight matrix $W \\in \\mathbb{R}^{m \\times n}$.\r\n\r\n### 1.2 Motivation\r\nExisting methods like Task Arithmetic (TA) simply sum the task vectors ($\\Delta_{TA} = \\sum \\Delta_t$). The authors find that:\r\n1.  **Cosine Similarity** between task vectors does not correlate well with merging performance.\r\n2.  **Subspace Alignment Ratio (SAR)** *does* correlate strongly with performance. SAR measures how well the principal directions of individual tasks align with the merged model.\r\n3.  TA results in a skewed singular value spectrum dominated by a few components, underrepresenting some tasks.\r\n4.  **Solution**: Flattening the singular value spectrum (**Isotropic Merging**) improves alignment and performance.\r\n\r\n---\r\n\r\n## 2. Method 1: Isotropic Merging in Common Subspace (Iso-C)\r\n\r\n**Core Idea**: Replace the skewed singular values of the summed task matrix with a uniform (isotropic) value equal to the average singular value.\r\n\r\n### Algorithm Steps (Per Layer)\r\n\r\n**Input**: Task matrices $\\Delta_1, \\dots, \\Delta_T$ where $\\Delta_t \\in \\mathbb{R}^{m \\times n}$.\r\n\r\n1.  **Sum Task Matrices**:\r\n    $$ \\Delta_{TA} = \\sum_{t=1}^{T} \\Delta_t $$\r\n\r\n2.  **SVD Decomposition**:\r\n    Compute the SVD of the summed matrix:\r\n    $$ \\Delta_{TA} = U \\Sigma V^\\top $$\r\n    Where $U \\in \\mathbb{R}^{m \\times r}$, $\\Sigma \\in \\mathbb{R}^{r \\times r}$, $V \\in \\mathbb{R}^{n \\times r}$, and $r$ is the rank.\r\n\r\n3.  **Calculate Isotropic Factor ($\\bar{\\sigma}$)**:\r\n    Compute the average of the singular values $\\{\\sigma_i\\}$:\r\n    $$ \\bar{\\sigma} = \\frac{1}{r} \\sum_{i=1}^{r} \\sigma_i $$\r\n\r\n4.  **Reconstruct Matrix**:\r\n    Create the merged update matrix using the isotropic scaling factor:\r\n    $$ \\Delta_{\\text{Iso-C}} = \\bar{\\sigma} U V^\\top $$\r\n\r\n5.  **Final Merged Weights**:\r\n    $$ \\theta_{\\text{Iso-C}} = \\theta_0 + \\alpha \\Delta_{\\text{Iso-C}} $$\r\n    Where $\\alpha$ is a scaling coefficient (hyperparameter).\r\n\r\n---\r\n\r\n## 3. Method 2: Isotropic Merging with Common and Task-Specific Subspaces (Iso-CTS)\r\n\r\n**Core Idea**: Iso-C relies only on the \"Common Subspace\" defined by $\\Delta_{TA}$. Iso-CTS explicitly adds \"Task-Specific Subspaces\" (directions orthogonal to the common subspace) to ensure no task is left behind.\r\n\r\n### Algorithm Steps (Per Layer)\r\n\r\n**Input**: Task matrices $\\Delta_1, \\dots, \\Delta_T$, Pre-trained $\\theta_0$, Hyperparameters $k$ (common dim) and $\\alpha$.\r\n\r\n1.  **Common Subspace Extraction**:\r\n    *   Compute $\\Delta_{TA} = \\sum \\Delta_t$.\r\n    *   Compute SVD: $\\Delta_{TA} = U \\Sigma V^\\top$.\r\n    *   Retain the **top-k** singular vectors/values:\r\n        *   $U^{1:k} = [u_1 | \\dots | u_k]$\r\n        *   $V^{1:k} = [v_1 | \\dots | v_k]$\r\n        *   $\\sigma^{cm} = \\text{diag}(\\Sigma)_{1:k}$ (Common singular values).\r\n\r\n2.  **Task-Specific Projection**:\r\n    For each task $t = 1 \\dots T$:\r\n    *   Project $\\Delta_t$ onto the subspace **orthogonal** to the common subspace $U^{1:k}$:\r\n        $$ \\overline{\\Delta}_t = \\Delta_t - U^{1:k} (U^{1:k})^\\top \\Delta_t $$\r\n    *   Compute SVD of the residual: $\\overline{\\Delta}_t = \\overline{U}_t \\overline{\\Sigma}_t \\overline{V}_t^\\top$.\r\n    *   Retain top **s** components, where $s = \\lfloor \\frac{r - k}{T} \\rfloor$:\r\n        *   $\\overline{U}_t^{1:s}$, $\\overline{V}_t^{1:s}$, and $\\sigma_t^{ts} = \\text{diag}(\\overline{\\Sigma}_t)_{1:s}$.\r\n\r\n3.  **Combine Subspaces**:\r\n    Concatenate the common basis and all task-specific bases:\r\n    $$ U_* = [ U^{1:k} | \\overline{U}_1^{1:s} | \\dots | \\overline{U}_T^{1:s} ] \\in \\mathbb{R}^{m \\times r} $$\r\n    $$ V_* = [ V^{1:k} | \\overline{V}_1^{1:s} | \\dots | \\overline{V}_T^{1:s} ] \\in \\mathbb{R}^{n \\times r} $$\r\n\r\n4.  **Orthogonalization (Whitening)**:\r\n    Since the concatenated bases $U_*$ and $V_*$ are not necessarily orthogonal, apply whitening via SVD:\r\n    *   Compute SVD of $U_*$: $U_* = P_{U_*} \\Sigma_{U_*} Q_{U_*}^\\top$.\r\n    *   Update $U_* \\leftarrow P_{U_*} Q_{U_*}^\\top$.\r\n    *   Compute SVD of $V_*$: $V_* = P_{V_*} \\Sigma_{V_*} Q_{V_*}^\\top$.\r\n    *   Update $V_* \\leftarrow P_{V_*} Q_{V_*}^\\top$.\r\n\r\n5.  **Calculate Isotropic Factor ($\\bar{\\sigma}$)**:\r\n    Average all selected singular values (both common and task-specific):\r\n    $$ \\bar{\\sigma} = \\frac{1}{r} \\left( \\sum_{i=1}^k \\sigma^{cm}_i + \\sum_{t=1}^T \\sum_{i=1}^s \\sigma^{ts}_{t,i} \\right) $$\r\n\r\n6.  **Reconstruct Matrix**:\r\n    $$ \\Delta_{\\text{Iso-CTS}} = \\bar{\\sigma} U_* V_*^\\top $$\r\n\r\n7.  **Final Merged Weights**:\r\n    $$ \\theta_{\\text{Iso-CTS}} = \\theta_0 + \\alpha \\Delta_{\\text{Iso-CTS}} $$\r\n\r\n---\r\n\r\n## 4. Implementation Details & Hyperparameters\r\n\r\n### 4.1 Implementation Constraints (Appendix C.2)\r\n*   **2D Matrices**: The SVD-based methods (Iso-C, Iso-CTS) are applied **only to 2D weight matrices** (e.g., Linear layers, Conv2d reshaped).\r\n*   **1D Vectors**: For parameters that are vectors (e.g., Bias terms `bias`, LayerNorm parameters `weight` and `bias`), **standard averaging (Task Arithmetic)** is used instead of SVD.\r\n    *   Equation: $\\theta_{merged}^{(1D)} = \\theta_0^{(1D)} + \\alpha \\sum \\Delta_t^{(1D)}$.\r\n\r\n### 4.2 Hyperparameters\r\n*   **Common Subspace Ratio ($k/r$)**:\r\n    *   For Iso-CTS, the optimal fraction of subspace assigned to the common subspace is **0.8**.\r\n    *   $k = \\lfloor 0.8 \\times \\text{rank} \\rfloor$.\r\n    *   $s = \\lfloor (r - k) / T \\rfloor$.\r\n*   **Scaling Coefficient ($\\alpha$)**:\r\n    *   The paper suggests optimal $\\alpha$ values in **Table 5**.\r\n    *   **Iso-C**: $\\alpha \\approx 1.3$ (range 0.8 - 1.5 depending on model/tasks).\r\n    *   **Iso-CTS**: $\\alpha \\approx 1.4$ (range 1.1 - 1.9).\r\n    *   General recommendation: Iso methods are more robust to $\\alpha$ than TA.\r\n\r\n### 4.3 Computational Complexity (Appendix B)\r\n*   **Iso-C**: $\\mathcal{O}(L n^3)$ (One SVD per layer).\r\n*   **Iso-CTS**: $\\mathcal{O}(T L n^3)$ (SVD on $\\Delta_{TA}$ + SVD on each of $T$ tasks + 2 small SVDs for whitening).\r\n\r\n---\r\n\r\n## 5. Key Differences Summary\r\n\r\n| Feature | Task Arithmetic (TA) | Iso-C | Iso-CTS |\r\n| :--- | :--- | :--- | :--- |\r\n| **Formula** | Summation | SVD + Flatten Spectrum | SVD + Projection + Flatten |\r\n| **Spectrum** | Skewed (Dominant directions) | Flat (Isotropic) | Flat (Isotropic) |\r\n| **Subspaces** | Implicitly Common | Common Only | Common + Task-Specific |\r\n| **Handling 1D Params** | Sum | Sum | Sum |\r\n| **Complexity** | Low | Medium | High |",
+                "is_error": false
+              },
+              {
+                "tool_call_id": "toolubdrk01RJMaDjPZAAoaK7WvjN3Wmb",
+                "content": "# setup_dummy_data.py\r\nimport torch\r\nimport torch.nn as nn\r\nimport os\r\nimport shutil\r\n\r\n# 1. 定义一个简单的 Tiny Model\r\n# 包含 Linear (2D weight + 1D bias) 和 LayerNorm (1D weight + 1D bias)\r\n# 确保能测试到论文中关于不同维度处理的要求\r\nclass TinyModel(nn.Module):\r\n    def __init__(self):\r\n        super().__init__()\r\n        self.fc1 = nn.Linear(10, 8)  # Weight: [8, 10], Bias: [8]\r\n        self.ln = nn.LayerNorm(8)    # Weight: [8], Bias: [8]\r\n        self.fc2 = nn.Linear(8, 4)   # Weight: [4, 8], Bias: [4]\r\n\r\n    def forward(self, x):\r\n        return self.fc2(self.ln(self.fc1(x)))\r\n\r\ndef generate_data(root_dir=\"./mock_data\"):\r\n    # 清理旧数据\r\n    if os.path.exists(root_dir):\r\n        shutil.rmtree(root_dir)\r\n    os.makedirs(root_dir)\r\n\r\n    model_name = \"Tiny-ViT\"\r\n    datasets = [\"Task_A\", \"Task_B\", \"Task_C\"]\r\n    \r\n    base_path = os.path.join(root_dir, \"checkpoints\", model_name)\r\n    os.makedirs(base_path, exist_ok=True)\r\n\r\n    # 1. 生成 Pre-trained Model (Zero-shot)\r\n    torch.manual_seed(42)\r\n    ptm = TinyModel()\r\n    ptm_path = os.path.join(base_path, \"zeroshot.pt\")\r\n    torch.save(ptm.state_dict(), ptm_path)\r\n    print(f\"Generated Pre-trained model at {ptm_path}\")\r\n\r\n    # 2. 生成各个 Task 的 Fine-tuned Models\r\n    # 通过在 PTM 基础上加随机噪声来模拟微调\r\n    for task in datasets:\r\n        task_path = os.path.join(base_path, task)\r\n        os.makedirs(task_path, exist_ok=True)\r\n        \r\n        # 模拟微调：加一些噪声\r\n        ft_state_dict = {}\r\n        for k, v in ptm.state_dict().items():\r\n            noise = torch.randn_like(v) * 0.1\r\n            ft_state_dict[k] = v + noise\r\n        \r\n        save_path = os.path.join(task_path, \"finetuned.pt\")\r\n        torch.save(ft_state_dict, save_path)\r\n        print(f\"Generated Fine-tuned model for {task} at {save_path}\")\r\n\r\n    print(\"\\n✅ Dummy data generation complete!\")\r\n    print(f\"Root Directory: {os.path.abspath(root_dir)}\")\r\n\r\nif __name__ == \"__main__\":\r\n    generate_data()",
+                "is_error": false
+              }
+            ]
+          },
+          {
+            "turn_index": 4,
+            "role": "assistant",
+            "content": "Now I have a clear picture of both algorithms. Let me implement them.",
+            "api_call_index": 2,
+            "tokens": {
+              "input": 20316,
+              "output": 2397,
+              "total": 22713
+            },
+            "tool_calls": [
+              {
+                "id": "toolu_bdrk_015Yd6mZgatduBZ4bYYhBsy9",
+                "name": "write",
+                "arguments": "{\"path\": \"/tmp/isolated_workspace_1091/merging_interface.py\", \"content\": \"# --- START OF FILE merging_interface.py ---\\nimport torch\\nfrom typing import List, Dict\\n\\n\\\"\\\"\\\"\\nAssignment: Isotropic Model Merging Implementation\\nPlease implement the two functions below corresponding to Iso-C and Iso-CTS algorithms.\\n\\nConstraints:\\n1. Input: \\n   - ptm_state_dict: Dictionary of the pre-trained model weights.\\n   - ft_state_dicts: List of dictionaries, each containing a fine-tuned model's weights.\\n   - parameters: Hyperparameters (alpha, scaling coefficient, etc).\\n   \\n2. Logic:\\n   - Calculate Task Vectors: tau_i = theta_i - theta_0\\n   - Apply SVD-based merging ONLY on 2D parameter tensors (e.g., Linear weights).\\n   - Apply simple Task Arithmetic (Average) on 0D/1D parameter tensors (e.g., Bias, LayerNorm).\\n   - Return the merged state_dict.\\n\\n3. Do NOT implement file I/O. Focus only on the tensor operations.\\n\\\"\\\"\\\"\\n\\ndef iso_c_merging(\\n    ptm_state_dict: Dict[str, torch.Tensor],\\n    ft_state_dicts: List[Dict[str, torch.Tensor]],\\n    alpha: float = 1.3\\n) -> Dict[str, torch.Tensor]:\\n    \\\"\\\"\\\"\\n    Algorithm 1: Isotropic Merging in Common Subspace (Iso-C)\\n    \\n    Args:\\n        ptm_state_dict: Pre-trained model weights\\n        ft_state_dicts: List of fine-tuned model weights\\n        alpha: Scaling coefficient\\n        \\n    Returns:\\n        merged_state_dict: The final merged model weights\\n    \\\"\\\"\\\"\\n    T = len(ft_state_dicts)\\n    merged_state_dict = {}\\n\\n    for key in ptm_state_dict:\\n        theta_0 = ptm_state_dict[key]\\n\\n        # Compute task vectors: delta_t = theta_t - theta_0\\n        task_vectors = [ft[key] - theta_0 for ft in ft_state_dicts]\\n\\n        if theta_0.dim() <= 1:\\n            # 0D/1D tensors (bias, LayerNorm): Task Arithmetic (mean of task vectors * alpha)\\n            delta_ta = torch.stack(task_vectors).sum(dim=0)\\n            merged_state_dict[key] = theta_0 + alpha * (delta_ta / T)\\n        else:\\n            # 2D weight matrices: apply SVD-based isotropic merging\\n\\n            # Step 1: Sum task matrices\\n            delta_ta = torch.stack(task_vectors).sum(dim=0)\\n\\n            # Step 2: SVD decomposition\\n            U, S, Vh = torch.linalg.svd(delta_ta, full_matrices=False)\\n            # U: (m, r), S: (r,), Vh: (r, n)  where r = min(m, n)\\n\\n            # Step 3: Calculate isotropic factor (mean of singular values)\\n            sigma_bar = S.mean()\\n\\n            # Step 4: Reconstruct with isotropic spectrum\\n            # delta_iso = sigma_bar * U @ V^T\\n            delta_iso = sigma_bar * (U @ Vh)\\n\\n            # Step 5: Final merged weights\\n            merged_state_dict[key] = theta_0 + alpha * delta_iso\\n\\n    return merged_state_dict\\n\\n\\ndef iso_cts_merging(\\n    ptm_state_dict: Dict[str, torch.Tensor],\\n    ft_state_dicts: List[Dict[str, torch.Tensor]],\\n    alpha: float = 1.4,\\n    common_ratio: float = 0.8\\n) -> Dict[str, torch.Tensor]:\\n    \\\"\\\"\\\"\\n    Algorithm 2: Isotropic Merging with Common and Task-Specific Subspaces (Iso-CTS)\\n    \\n    Args:\\n        ptm_state_dict: Pre-trained model weights\\n        ft_state_dicts: List of fine-tuned model weights\\n        alpha: Scaling coefficient\\n        common_ratio: The ratio of dimensions allocated to the common subspace (k/r)\\n        \\n    Returns:\\n        merged_state_dict: The final merged model weights\\n    \\\"\\\"\\\"\\n    T = len(ft_state_dicts)\\n    merged_state_dict = {}\\n\\n    for key in ptm_state_dict:\\n        theta_0 = ptm_state_dict[key]\\n\\n        # Compute task vectors\\n        task_vectors = [ft[key] - theta_0 for ft in ft_state_dicts]\\n\\n        if theta_0.dim() <= 1:\\n            # 0D/1D tensors: Task Arithmetic (mean of task vectors * alpha)\\n            delta_ta = torch.stack(task_vectors).sum(dim=0)\\n            merged_state_dict[key] = theta_0 + alpha * (delta_ta / T)\\n        else:\\n            # 2D weight matrices: apply Iso-CTS algorithm\\n\\n            # Step 1: Common Subspace Extraction\\n            delta_ta = torch.stack(task_vectors).sum(dim=0)\\n            U_ta, S_ta, Vh_ta = torch.linalg.svd(delta_ta, full_matrices=False)\\n            # r = rank (number of singular values)\\n            r = S_ta.shape[0]\\n\\n            # Determine k (common subspace dimension) and s (per-task specific dimension)\\n            k = max(1, int(common_ratio * r))\\n            s = max(0, (r - k) // T)\\n\\n            # Top-k common subspace\\n            U_common = U_ta[:, :k]        # (m, k)\\n            Vh_common = Vh_ta[:k, :]       # (k, n)\\n            V_common = Vh_common.T         # (n, k)\\n            sigma_common = S_ta[:k]        # (k,)\\n\\n            # Step 2: Task-Specific Projection\\n            U_task_list = []\\n            V_task_list = []\\n            sigma_task_list = []\\n\\n            for t in range(T):\\n                delta_t = task_vectors[t]\\n\\n                # Project onto orthogonal complement of common subspace\\n                # delta_bar_t = delta_t - U_common @ U_common^T @ delta_t\\n                proj = U_common @ (U_common.T @ delta_t)\\n                delta_bar_t = delta_t - proj\\n\\n                if s > 0:\\n                    # SVD of residual\\n                    U_res, S_res, Vh_res = torch.linalg.svd(delta_bar_t, full_matrices=False)\\n\\n                    # Retain top-s components\\n                    actual_s = min(s, S_res.shape[0])\\n                    U_task_list.append(U_res[:, :actual_s])        # (m, actual_s)\\n                    V_task_list.append(Vh_res[:actual_s, :].T)     # (n, actual_s)\\n                    sigma_task_list.append(S_res[:actual_s])        # (actual_s,)\\n\\n            # Step 3: Combine Subspaces\\n            # U_* = [U_common | U_task_1 | ... | U_task_T]\\n            # V_* = [V_common | V_task_1 | ... | V_task_T]\\n            U_parts = [U_common]\\n            V_parts = [V_common]\\n            all_sigmas = [sigma_common]\\n\\n            for i in range(len(U_task_list)):\\n                U_parts.append(U_task_list[i])\\n                V_parts.append(V_task_list[i])\\n                all_sigmas.append(sigma_task_list[i])\\n\\n            U_star = torch.cat(U_parts, dim=1)  # (m, r_total)\\n            V_star = torch.cat(V_parts, dim=1)  # (n, r_total)\\n            all_sigma = torch.cat(all_sigmas)    # (r_total,)\\n\\n            # Step 4: Orthogonalization (Whitening) via SVD\\n            # Whiten U_*\\n            P_u, Sigma_u, Qh_u = torch.linalg.svd(U_star, full_matrices=False)\\n            U_star = P_u @ Qh_u  # Orthogonalized U_*\\n\\n            # Whiten V_*\\n            P_v, Sigma_v, Qh_v = torch.linalg.svd(V_star, full_matrices=False)\\n            V_star = P_v @ Qh_v  # Orthogonalized V_*\\n\\n            # Step 5: Calculate Isotropic Factor\\n            r_total = all_sigma.shape[0]\\n            sigma_bar = all_sigma.sum() / r_total\\n\\n            # Step 6: Reconstruct Matrix\\n            delta_iso_cts = sigma_bar * (U_star @ V_star.T)\\n\\n            # Step 7: Final Merged Weights\\n            merged_state_dict[key] = theta_0 + alpha * delta_iso_cts\\n\\n    return merged_state_dict\\n# --- END OF FILE merging_interface.py ---\\n\"}"
+              }
+            ]
+          },
+          {
+            "turn_index": 5,
+            "role": "tool",
+            "tool_results": [
+              {
+                "tool_call_id": "toolubdrk015Yd6mZgatduBZ4bYYhBsy9",
+                "content": "Successfully wrote 6861 bytes to /tmp/isolated_workspace_1091/merging_interface.py",
+                "is_error": false
+              }
+            ]
+          },
+          {
+            "turn_index": 6,
+            "role": "assistant",
+            "content": "Now let me verify it runs correctly with the dummy data:",
+            "api_call_index": 3,
+            "tokens": {
+              "input": 22749,
+              "output": 545,
+              "total": 23294
+            },
+            "tool_calls": [
+              {
+                "id": "toolu_bdrk_01Nujj6RSmWdxk1ftGzs5Knt",
+                "name": "exec",
+                "arguments": "{\"command\": \"cd /tmp/isolated_workspace_1091 && python3 -c \\\"\\n# Generate dummy data first\\nexec(open('context/set_up_dummy_data.py').read())\\ngenerate_data('./mock_data')\\n\\nimport torch\\nfrom merging_interface import iso_c_merging, iso_cts_merging\\n\\n# Load data\\nptm = torch.load('./mock_data/checkpoints/Tiny-ViT/zeroshot.pt', weights_only=True)\\nft_dicts = []\\nfor task in ['Task_A', 'Task_B', 'Task_C']:\\n    ft = torch.load(f'./mock_data/checkpoints/Tiny-ViT/{task}/finetuned.pt', weights_only=True)\\n    ft_dicts.append(ft)\\n\\nprint('=== Iso-C Merging ===')\\nmerged_c = iso_c_merging(ptm, ft_dicts, alpha=1.3)\\nfor k, v in merged_c.items():\\n    print(f'  {k}: shape={v.shape}, mean={v.mean():.6f}, std={v.std():.6f}')\\n\\nprint()\\nprint('=== Iso-CTS Merging ===')\\nmerged_cts = iso_cts_merging(ptm, ft_dicts, alpha=1.4)\\nfor k, v in merged_cts.items():\\n    print(f'  {k}: shape={v.shape}, mean={v.mean():.6f}, std={v.std():.6f}')\\n\\n# Verify shapes match\\nprint()\\nfor k in ptm:\\n    assert merged_c[k].shape == ptm[k].shape, f'Shape mismatch in Iso-C for {k}'\\n    assert merged_cts[k].shape == ptm[k].shape, f'Shape mismatch in Iso-CTS for {k}'\\nprint('✅ All shapes match. Both algorithms executed successfully.')\\n\\\"\\n\"}"
+              }
+            ]
+          },
+          {
+            "turn_index": 7,
+            "role": "tool",
+            "tool_results": [
+              {
+                "tool_call_id": "toolubdrk01Nujj6RSmWdxk1ftGzs5Knt",
+                "content": "Generated Pre-trained model at ./mock_data/checkpoints/Tiny-ViT/zeroshot.pt\nGenerated Fine-tuned model for Task_A at ./mock_data/checkpoints/Tiny-ViT/Task_A/finetuned.pt\nGenerated Fine-tuned model for Task_B at ./mock_data/checkpoints/Tiny-ViT/Task_B/finetuned.pt\nGenerated Fine-tuned model for Task_C at ./mock_data/checkpoints/Tiny-ViT/Task_C/finetuned.pt\n\n✅ Dummy data generation complete!\nRoot Directory: /tmp/isolated_workspace_1091/mock_data\nGenerated Pre-trained model at ./mock_data/checkpoints/Tiny-ViT/zeroshot.pt\nGenerated Fine-tuned model for Task_A at ./mock_data/checkpoints/Tiny-ViT/Task_A/finetuned.pt\nGenerated Fine-tuned model for Task_B at ./mock_data/checkpoints/Tiny-ViT/Task_B/finetuned.pt\nGenerated Fine-tuned model for Task_C at ./mock_data/checkpoints/Tiny-ViT/Task_C/finetuned.pt\n\n✅ Dummy data generation complete!\nRoot Directory: /tmp/isolated_workspace_1091/mock_data\n=== Iso-C Merging ===\n  fc1.weight: shape=torch.Size([8, 10]), mean=-0.009890, std=0.268529\n  fc1.bias: shape=torch.Size([8]), mean=-0.074697, std=0.204000\n  ln.weight: shape=torch.Size([8]), mean=1.000278, std=0.056362\n  ln.bias: shape=torch.Size([8]), mean=-0.014794, std=0.051318\n  fc2.weight: shape=torch.Size([4, 8]), mean=-0.093147, std=0.308537\n  fc2.bias: shape=torch.Size([4]), mean=-0.072870, std=0.140891\n\n=== Iso-CTS Merging ===\n  fc1.weight: shape=torch.Size([8, 10]), mean=0.016563, std=0.290355\n  fc1.bias: shape=torch.Size([8]), mean=-0.077685, std=0.205721\n  ln.weight: shape=torch.Size([8]), mean=1.000299, std=0.060697\n  ln.bias: shape=torch.Size([8]), mean=-0.015932, std=0.055265\n  fc2.weight: shape=torch.Size([4, 8]), mean=-0.052567, std=0.313497\n  fc2.bias: shape=torch.Size([4]), mean=-0.070886, std=0.143282\n\n✅ All shapes match. Both algorithms executed successfully.",
+                "is_error": false
+              }
+            ]
+          },
+          {
+            "turn_index": 8,
+            "role": "assistant",
+            "content": "Both algorithms run cleanly. Here's a summary of what's implemented in `merging_interface.py`:\n\n### `iso_c_merging` (Algorithm 1 — Isotropic Merging in Common Subspace)\n1. Computes task vectors Δ_t = θ_t − θ_0 for each fine-tuned model\n2. **For 0D/1D tensors** (bias, LayerNorm): averages the task vectors, scales by α, adds to pretrained weights\n3. **For 2D weight matrices**: sums all task vectors → SVD → replaces the singular value spectrum with the mean σ̄ → reconstructs as α · σ̄ · U·Vᵀ + θ_0\n\n### `iso_cts_merging` (Algorithm 2 — Common + Task-Specific Subspaces)\n1. Same task vector computation and 0D/1D handling as Iso-C\n2. **For 2D matrices**:\n   - Extracts the **common subspace** (top-k singular vectors of ΔTA, where k = ⌊0.8·r⌋)\n   - For each task, projects onto the **orthogonal complement** of the common subspace, then takes top-s singular vectors (s = ⌊(r−k)/T⌋)\n   - **Concatenates** all bases and applies **whitening** (SVD-based orthogonalization) to both U★ and V★\n   - Computes the isotropic factor σ̄ from all collected singular values\n   - Reconstructs as α · σ̄ · U★·V★ᵀ + θ_0",
+            "api_call_index": 4,
+            "tokens": {
+              "input": 24016,
+              "output": 412,
+              "total": 24428
+            }
+          }
+        ],
+        "api_calls": [
+          {
+            "index": 0,
+            "timestamp": "2026-04-18T14:08:58.081625",
+            "duration_ms": 4240,
+            "tokens": {
+              "input": 14974,
+              "output": 122,
+              "total": 15096
+            },
+            "model": "claude-opus-4-6",
+            "response_status": 200
+          },
+          {
+            "index": 1,
+            "timestamp": "2026-04-18T14:09:10.923794",
+            "duration_ms": 12414,
+            "tokens": {
+              "input": 15874,
+              "output": 176,
+              "total": 16050
+            },
+            "model": "claude-opus-4-6",
+            "response_status": 200
+          },
+          {
+            "index": 2,
+            "timestamp": "2026-04-18T14:09:41.133656",
+            "duration_ms": 30189,
+            "tokens": {
+              "input": 20316,
+              "output": 2397,
+              "total": 22713
+            },
+            "model": "claude-opus-4-6",
+            "response_status": 200
+          },
+          {
+            "index": 3,
+            "timestamp": "2026-04-18T14:09:50.542255",
+            "duration_ms": 9201,
+            "tokens": {
+              "input": 22749,
+              "output": 545,
+              "total": 23294
+            },
+            "model": "claude-opus-4-6",
+            "response_status": 200
+          },
+          {
+            "index": 4,
+            "timestamp": "2026-04-18T14:10:02.366159",
+            "duration_ms": 9676,
+            "tokens": {
+              "input": 24016,
+              "output": 412,
+              "total": 24428
+            },
+            "model": "claude-opus-4-6",
+            "response_status": 200
+          }
+        ],
+        "summary": {
+          "total_api_calls": 5,
+          "total_tokens": {
+            "input": 97929,
+            "output": 3652,
+            "cached": 0,
+            "total": 101581
+          },
+          "total_tool_calls": 6,
+          "tool_frequency": {
+            "read": 3,
+            "exec": 2,
+            "write": 1
+          }
+        }
+      }
+    }
+  ]
+}
