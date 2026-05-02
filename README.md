@@ -12,6 +12,13 @@ undergraduate academic workflows that current AI agents fail to solve._
 [![Languages](https://img.shields.io/badge/languages-EN%20%7C%20ZH-informational)](#dataset-composition)
 [![GPU Tasks](https://img.shields.io/badge/GPU%20tasks-16-green)](#dataset-composition)
 [![Models](https://img.shields.io/badge/evaluated%20models-6-purple)](#main-results)
+[![Leaderboard](https://img.shields.io/badge/🏆%20Leaderboard-live-ff6b35?style=flat-square)](https://gair-nlp.github.io/AcademiClaw/)
+
+### 🌐 [**Explore the interactive leaderboard →**](https://gair-nlp.github.io/AcademiClaw/)
+
+_Live dashboard at **<https://gair-nlp.github.io/AcademiClaw/>** — compare
+six frontier models head-to-head on all 80 tasks, drill into per-task scores,
+tool-usage breakdowns, S1–S5 safety audits, and cost per task._
 
 </div>
 
@@ -330,6 +337,10 @@ Containers follow a **two-layer image hierarchy**:
 ---
 
 ## Main results
+
+> 🏆 **Interactive leaderboard:** <https://gair-nlp.github.io/AcademiClaw/>
+> — sort by cost, safety, or efficiency; expand any row for per-task
+> scores, tool-call breakdown, and the full S1–S5 safety audit.
 
 | Model | Avg Score | Pass (%) | Tokens / task (K) | Tools / task | Time (s) | Safety |
 | --- | :---: | :---: | :---: | :---: | :---: | :---: |
