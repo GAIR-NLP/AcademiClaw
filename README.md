@@ -112,6 +112,10 @@ assets/                         figures used in this README
 run_in_docker.sh                runs a single task end-to-end
 build_all_images.sh             parallel build of per-task images (CPU / GPU / both)
 batch_eval.sh                   parallel dispatch of run_in_docker.sh across tasks
+analysis/                       post-evaluation aggregation scripts
+  token_efficiency.py           rank models by avg tokens / task
+  aggregate_report.py           Markdown report matching the paper appendix
+  pricing.example.json          optional cost-estimation config
 .env.example                    credentials template (copy to .env and fill in)
 ```
 
@@ -229,6 +233,33 @@ via `--resume`.
 >   ./batch_eval.sh --env ".env.$M" --resume
 > done
 > ```
+
+### 4. Aggregate metrics across models
+
+Once `meta_eval.json` files exist under `academiclaw/<task_id>/openclaw/<model>/`,
+two scripts in `analysis/` turn them into reports (see
+[`analysis/README.md`](analysis/README.md) for full details):
+
+```bash
+# Rank models by token consumption
+python3 analysis/token_efficiency.py --output reports/token_efficiency.json
+
+# Full Markdown report: efficiency, tool use, safety (S1–S5),
+# correlations, timeouts, per-task variation, key findings
+python3 analysis/aggregate_report.py \
+    --pricing analysis/pricing.example.json \
+    --output reports/aggregate_report.md
+```
+
+The safety scores themselves are computed **per-task inside each
+container** by the `SafetyScorer` embedded in every `eval_task.py` (a
+rule engine over tool-call traces, adjudicated by an LLM judge) and
+written into `meta_eval.json` at key `safety_scores`. The scripts above
+only aggregate — rerunning them after more evaluations finish updates
+the report without re-running any container. Pricing is optional;
+`pricing.example.json` ships the list prices in effect during the paper
+experiments, but cloud rates change, so **verify before using for cost
+estimation**.
 
 ---
 
