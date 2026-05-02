@@ -1,0 +1,74 @@
+{
+  "task_id": "zh_lc3_jisuanqi",
+  "model_name": "glm-5",
+  "agent_type": "openclaw",
+  "best_score": 80,
+  "best_attempt": 1,
+  "total_attempts": 1,
+  "passed": true,
+  "attempts": [
+    {
+      "attempt_index": 1,
+      "score": 80,
+      "passed": true,
+      "workspace_path": "/tmp/isolated_output_1091/attempt_1",
+      "agent_output_length": 64,
+      "eval_report": {
+        "总分": 80,
+        "结果评分": {
+          "分数": 57,
+          "详情": {
+            "一、文件交付 (10分)": {
+              "1.1 文件存在": "5/5 - lab2.asm",
+              "1.2 内容有效性": "5/5 - .ORIG=有, .END=有, 483行有效代码"
+            },
+            "二、结构完整性 (25分)": {
+              "2.1 .ORIG x3000": "3/3",
+              "2.2 PUSH 子程序": "4/4",
+              "2.3 POP 子程序": "4/4",
+              "2.4 命令分发": "7/8 - 检测到: X, C, +, *, %, @, D",
+              "2.5 RangeCheck": "3/3",
+              "2.6 数据区": "3/3"
+            },
+            "三、运算实现 (25分)": {
+              "3.1 OpAdd": "4/4",
+              "3.2 OpMult": "4/5",
+              "3.3 Opmod": "4/4",
+              "3.4 OpXOR": "3/4",
+              "3.5 Opneg": "3/3",
+              "3.6 OpClear": "2/2",
+              "3.7 OpDisplay": "2/2",
+              "3.8 栈恢复 (Restore)": "1/1"
+            }
+          },
+          "扣分原因": []
+        },
+        "过程评分": {
+          "分数": 23,
+          "详情": {
+            "四、代码质量 LLM Judge (40分)": {
+              "评估方式": "LLM-as-Judge",
+              "4.1 逻辑正确性 (15)": "9/15 - Main loop and dispatch: The command dispatch for single‑char commands X, C, +, *, %, @, D is structured correctly using character comparisons via preloaded negative constants. The handling of 'neg' vs negative number is mostly logical: 'n' → CheckNeg reads 'e','g'; '-' → CheckMinusOrNeg disambiguates between 'neg' and a negative numeric literal. However, there are subtle issues: (1) CheckNeg and CheckMinusOrNeg reuse R0 for GETC without first preserving the original command char, which is fine logically but slightly brittle. (2) The code branches to InvalidCmd if '-' is followed by 'e' but then not 'g', which may be acceptable by spec but is somewhat inconsistent user‑experience‑wise.\n\nStack usage and PUSH/POP protocol: The main code clearly assumes a separate PUSH/POP implementation with R6 as SP and R5 as status. The arithmetic ops call POP twice, check R5 for underflow, and on error try to restore the stack by adjusting R6. However, for a stack that grows from high to low addresses (R6-- on push), restoring values by `ADD R6, R6, #-1` *decrements* the stack pointer further away from the original values instead of restoring them. Proper restoration would require incrementing R6 and re‑storing popped values, not just moving the pointer. As written, the restore paths do not correctly recover the previous stack state.\n\nBinary operations: OpAdd, OpMult, OpMod, and OpXor all POP two operands, compute a result, call RangeCheck, and PUSH the result on success. Control‑flow for the success paths is sound, and the operations themselves are mostly correct:\n- Add: correct pop order, sum, and range check.\n- Mult: uses repeated addition with normalization of sign; handles zero multiplicand; calls RangeCheck before applying sign, which is acceptable if RangeCheck is symmetric for positive/negative magnitude, but not ideal (you want to range‑check the final signed result). Sign handling is otherwise consistent.\n- Mod: correctly treats remainder sign as dividend's sign, normalizes dividend and divisor, loops subtracting divisor until negative, then restores sign and range‑checks. Division by zero triggers an error message and attempts to restore the popped dividend but again with a faulty stack‑restore.\n- Xor: the boolean algebra implementation is correct for bitwise XOR: R0 gets (A OR B) AND NOT(A AND B). It then range‑checks and pushes.\n\nneg operator: DoOpNeg → OpNeg is referenced and logically intended, but OpNeg is not present in the truncated snippet; thus its logical correctness cannot be fully verified. Based on the pattern of other ops, it should POP one value, negate, range‑check, and PUSH. Since it’s outside the visible region, this reduces confidence.\n\nOverall: The top‑level logic and most arithmetic operations are structurally correct, but stack restoration on error is wrong for a descending stack, and the neg command handler is partially unverifiable from the truncated code.",
+              "4.2 可汇编性 (10)": "6/10 - The visible parts use valid LC‑3 syntax: .ORIG x3000, label definitions, BR/JSR/RET usage, and subroutine prologs with ST R7 / LD R7 are all standard. PUTS/GETC/OUT/HALT are legal TRAPs. Character comparisons using preloaded negative constants (NegX, NegC, etc.) and LD to bring them into registers is also fine.\n\nHowever, the submission is explicitly truncated with a '[... truncated for grading ...]' comment after SaveXor and does not show the remaining labels and data definitions (e.g., RangeCheck, PUSH, POP, ASCIItoBinary, BinarytoASCII, NegX, NegC, NegPlus, NegMult, NegMod, NegXor, NegD, NegN, NegMinus, NegE, NegG, NegNewline, MaxDigits, NegSignVal, NewlineVal, ASCIIBUFF, TooManyMsg, InvalidMsg, DivZeroMsg, EmptyMsg, StackBase, TempChar, TempXorVal, etc.). Since these are referenced but not visible, we cannot be certain all are defined and consistent.\n\nGiven the typical structure of such assignments, it is likely the student has defined these in the omitted section, but from the provided code alone, an assembler would emit undefined symbol errors. Some branches rely on PC‑relative offsets whose targets are nearby, so branch range is not an issue in the shown code. .FILL and label usage for SaveAdd, SaveMult, SaveMod, SaveDisp are correct. Overall, partially correct but not fully verifiable due to truncation.",
+              "4.3 边界处理 (10)": "5/10 - Range checking: All arithmetic ops call RangeCheck and inspect R5, branching to restoration paths when R5 > 0. This shows the intent to enforce [-999, 999]. Without the actual RangeCheck code, we cannot confirm correctness of bounds or sign handling; moreover, Mult currently calls RangeCheck before applying the result sign, which is slightly suspect if RangeCheck expects signed values.\n\nStack underflow: All operations check POP’s R5 and attempt to restore previously popped values by adjusting R6. However, for a descending stack (R6 decremented on push), using `ADD R6, R6, #-1` moves R6 further *down* in memory, not back toward the original top; this makes the underflow/partial‑pop recovery logically incorrect and can corrupt stack state. So while underflow is detected, the \"restore\" path is faulty.\n\nStack overflow: There is no visible check in the shown code for PUSH failure. The arithmetic ops call PUSH but do not check R5 afterward; they assume success. If PUSH signals overflow in R5, the current code would ignore it and proceed, leaving the stack pointer in an inconsistent state.\n\nASCII input limits: For numeric input, MaxDigits is enforced by R2 in PushValue and PushNegValue. When exceeded, the code consumes characters until newline and prints TooManyMsg. That’s a correct pattern. Newline detection uses NegNewline = -x000A or similar, comparing with `ADD R3, R0, R3; BRz` which is a standard trick.\n\nASCII→binary and binary→ASCII: These are invoked (ASCIItoBinary, BinarytoASCII) but their implementations are not shown, so we cannot confirm correct handling of sign, multi‑digit input, or bounds. OpDisplay uses BinarytoASCII, prints a newline, then ASCIIBUFF, then another newline, which is conceptually right but depends on ASCIIBUFF formatting.\n\nEdge messages: Division by zero in OpMod prints DivZeroMsg and restores the popped dividend by `ADD R6, R6, #-1`, which again is not correct for a descending stack.\n\nOverall: Many edge cases are conceptually considered (range, too many digits, div‑by‑zero, stack underflow), but stack restoration, PUSH error handling, and reliance on unseen conversion routines mean edge behavior is only partially correct.",
+              "4.4 完整性 (5)": "3/5 - Commands: The main loop includes handling for all required commands: X (Exit), C (OpClear), +(OpAdd), *(OpMult), %(OpMod), @(OpXor), D (OpDisplay), and neg (via CheckNeg / CheckMinusOrNeg → DoOpNeg). Numeric input (digits and negative numbers) is handled by PushValue and PushNegValue.\n\nStack and helpers: The code clearly relies on PUSH, POP, RangeCheck, ASCIItoBinary, BinarytoASCII, and various data labels (StackBase, ASCIIBUFF, messages), but their implementations/definitions are not in the visible part. OpNeg is referenced but not shown. Because the problem statement requires that all subroutines and data reside in the same .ORIG region, and since we do not see them here due to truncation, formal completeness cannot be fully confirmed. Still, the structure indicates the student intended to implement all required functionality.\n\nGiven the truncation, I award partial credit: the command set and high‑level structure are present, but at least one key subroutine (OpNeg) and all conversions/stack support routines are not verifiable from the snippet.",
+              "LLM 总评": "The submission shows a reasonably well‑structured stack calculator with a correct main dispatch loop, sensible handling for most operations, and clear intent to implement all required commands. However, the core stack discipline is flawed in error‑recovery paths: for a stack that grows from high to "
+            }
+          },
+          "扣分原因": []
+        },
+        "评语": "良好，主要功能正确，部分细节可加强。",
+        "分项得分": {
+          "文件交付": "10/10",
+          "结构完整性": "24/25",
+          "运算实现": "23/25",
+          "LLM Judge": "23/40"
+        }
+      },
+      "feedback": "Score: 80/100\n\nComment: 良好，主要功能正确，部分细节可加强。",
+      "timestamp": "2026-04-09T00:45:40.555564"
+    }
+  ],
+  "start_time": "2026-04-09T00:34:50.049237",
+  "end_time": "2026-04-09T00:45:40.555757"
+}

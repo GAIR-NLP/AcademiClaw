@@ -1,0 +1,83 @@
+{
+  "task_id": "zh_asr_bushu",
+  "model_name": "glm-5",
+  "agent_type": "openclaw",
+  "best_score": 69,
+  "best_attempt": 1,
+  "total_attempts": 1,
+  "passed": false,
+  "attempts": [
+    {
+      "attempt_index": 1,
+      "score": 69,
+      "passed": false,
+      "workspace_path": "/tmp/isolated_output_1091/attempt_1",
+      "agent_output_length": 41,
+      "eval_report": {
+        "总分": 69,
+        "分项得分": {
+          "一、文件交付": "10/10",
+          "二、Dockerfile 质量": "15/20",
+          "三、load.py 代码质量": "26/35",
+          "四、answer.md 内容": "9/15",
+          "五、整体方案正确性": "9/20"
+        },
+        "分项报告": {
+          "一、文件交付 (10分)": {
+            "分数": "10/10",
+            "详情": {
+              "dockerfile": "3/3 — 存在",
+              "load.py": "4/4 — 存在",
+              "answer.md": "3/3 — 存在"
+            }
+          },
+          "二、Dockerfile 质量 (20分)": {
+            "分数": "15/20",
+            "详情": {
+              "基础镜像": "3/3 — FROM 指令存在",
+              "fairseq2 安装": "3/7 — pip install fairseq2 但无源码编译",
+              "omnilingual-asr": "5/5 — pip install omnilingual-asr",
+              "关键依赖": "4/5 — 检测到: libsndfile, torch/pytorch, torchaudio, apt-get/pip"
+            }
+          },
+          "三、load.py 代码质量 (35分)": {
+            "分数": "26/35",
+            "详情": {
+              "语法": "5/5 — 语法正确",
+              "关键导入": "5/5 — torch, fairseq2, audio_lib",
+              "ckpt 加载": "10/10 — torch.load + load_state_dict，无 load_model",
+              "模型架构": "2/5 — 提及 wav2vec2 但架构构建不明确",
+              "tokenizer": "2/5 — 提及 tokenizer 和编码但加载方式不明确",
+              "音频推理": "2/5 — 有推理逻辑但不完整"
+            }
+          },
+          "四、answer.md 内容 (15分)": {
+            "分数": "9/15",
+            "详情": {
+              "LLM 评估": {
+                "环境配置": "4/5 — 说明了在 x86_64 下通过 pip 安装 fairseq2/fairseq2n=0.6，并给出 Dockerfile 的关键要点（基础镜像、系统依赖、虚拟环境、版本约束）。但没有按要求详细给出在昇腾/aarch64 平台上从源码编译 fairseq2 的完整流程（缺少 git clone、cmake、ninja 等具体命令），因此达不到满分标准。",
+                "模型加载": "4/5 — 对通过本地 ckpt 加载模型的实现进行了较深入的结构与配置分析：明确了 omniASR_CTC_300M 基于 wav2vec2_asr，给出了 omnilingual_asr 中 300m 配置、fairseq2 中 large_lv60k/large 配置，并展示了 create_omniasr_ctc_300m_config 的构建代码，说明了用 fairseq2 的配置体系重建架构。但文档没有明确写出完整的 ckpt 加载步骤（例如 torch.load(path)、从 ckpt 中取 state_dict 以及 model.load_state_dict(state_dict) 的具体代码和说明），因此与“详细说明 torch.load + load_state_dict”还有差距。",
+                "Demo 说明": "1/5 — 文档只写到 create_omniasr_ctc_300m_config 的实现片段，后续内容被截断，没有出现任何关于 demo 推理流程的说明：没有音频加载（如 torchaudio/ librosa 的使用）、没有重采样流程、没有具体的模型前向推理调用、没有 CTC 解码步骤、也没有 tokenizer 的编码/解码示例。因此只能视为基本未覆盖 demo 实现。"
+              }
+            }
+          },
+          "五、整体方案正确性 (20分)": {
+            "分数": "9/20",
+            "详情": {
+              "LLM 评估": {
+                "fairseq2 方案": "2/7 — 没有按要求给出 aarch64/NPU 环境下 fairseq2n 源码编译（git clone + cmake + ninja）的完整可执行方案，只是在 x86_64 上使用 pip 安装 fairseq2/fairseq2n，并笼统提到“可以从源码编译”，未给出任何具体 git 仓库地址、cmake 配置、ninja 构建和针对昇腾/aarch64 的依赖与编译细节。这没有真正解决题目指定的核心问题。",
+                "ckpt 加载": "4/7 — 优点：明确禁止使用 load_model，使用 torch.load 从本地 checkpoint 读取，手动构建 Wav2Vec2AsrConfig 与 Wav2Vec2EncoderConfig，再通过 create_wav2vec2_asr_model + load_state_dict(strict=True) 加载权重，并校验参数数量是否为 325,494,996，整体思路与要求基本一致。缺点：没有通过 fairseq2 的 model hub（如 get_wav2vec2_asr_model_hub / get_arch_config(\"300m\")），而是手写 config，存在与官方 300m 架构细节不完全一致的风险；提交片段中脚本未完整展示，缺失对 checkpoint 中 key（如 'model'）健壮性处理，以及未证明与官方 300m 架构完全对齐，因此技术路线部分达标但不完全严谨。",
+                "方案完整性": "3/6 — 端到端流程不完整：1）load.py 代码片段被截断，audio 加载与推理部分未展示；2）answer.md 中仅文字说明“完成语音识别 demo”和“提供 Dockerfile”，但并未给出完整 Dockerfile 内容，也未给出实际推理主函数、命令行参数解析与调用链（模型加载 → 音频解码 → 前处理 → 模型前向 → CTC 解码 → 文本输出）；3）CTC 解码细节、Beam Search/Greedy 实现和 tokenizer 实际使用（包括验证 'hello world' 编码为指定 ID 序列）均未给出可执行代码或日志；4）WER ≤ 20% 的验证方法和具体结果缺失。因此只能认为有部分流程设计思路，但缺少关键实现环节。"
+              }
+            }
+          }
+        },
+        "评语": "良好。基本完成任务，部分维度有改进空间。"
+      },
+      "feedback": "Score: 69/100\n\nComment: 良好。基本完成任务，部分维度有改进空间。",
+      "timestamp": "2026-04-09T01:05:34.100494"
+    }
+  ],
+  "start_time": "2026-04-09T00:44:58.564108",
+  "end_time": "2026-04-09T01:05:34.268471"
+}

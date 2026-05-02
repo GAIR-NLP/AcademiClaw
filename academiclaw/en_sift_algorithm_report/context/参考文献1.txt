@@ -1,0 +1,49 @@
+Programming Assignment (85 points)
+In this assignment, you will implement a Bag-of-Visual-Words (BoW) image classification pipeline on the
+provided image dataset (Caltech-101). You are given a Python skeleton file hw.py. You should only modify
+the parts marked with # TODO. Do not change any function signatures.
+You are allowed to use:
+• Python, NumPy
+• OpenCV SIFT implementation (cv2.SIFT
+etc.)
+create, detectAndCompute, cv2.imread, cv2.cvtColor,
+• sklearn.cluster.KMeans or your own k-means implementation
+• sklearn.svm.LinearSVC for classification
+Task 0: Extract SIFT descriptors from the dataset (20 points). Using images in the caltech-101
+dataset (you can download it at: https://www.kaggle.com/datasets/imbikramsaha/caltech-101), implement
+the function extract
+sift
+features in hw.py, which should:
+• Read each image in grayscale using OpenCV.
+• Detect and compute SIFT keypoints and descriptors using the official SIFT implementation.
+• Collect all descriptors into a single NumPy array of shape (N,128).
+• Also return a list where each element contains the descriptors for a single image.
+If an image has no detected keypoints, you may skip it or handle it in a reasonable way (e.g., return an
+all-zero histogram later).
+Task 1: Build a visual vocabulary with k-means (25 points). Using all SIFT descriptors from Task
+0, implement build
+codebook(descriptors, K) in hw.py that:
+• Takes a NumPy array of shape (N,128) containing all SIFT descriptors as input.
+• Runs k-means clustering with K clusters to obtain the visual vocabulary.
+• Returns the cluster centers as a matrix of shape (K,128) (each row is one visual word).
+You may use sklearn.cluster.KMeans or your own k-means implementation.
+Task 2: BoWhistogramfor asingle image (20 points). Implementcompute
+codebook) that:
+bow
+histogram(descriptors,
+• Assigns each SIFT descriptor of an image to its nearest visual word (e.g., using Euclidean distance).
+• Counts how many descriptors fall into each of the K clusters to form a histogram.
+• Normalizes the histogram to sum to 1.
+The function should return a 1D NumPy array of shape (K,).
+2
+Computer Vision (Fall 2025 ): Homework 2
+Problem 2
+Task 3: Train and evaluate a linear SVM (20 points). Using the BoW histograms:
+• Implement build
+features
+training and test splits.
+for
+dataset(...) to compute a BoW feature for each image in the
+• Trainalinear SVMclassifier using the training features and labels (you may use sklearn.svm.LinearSVC).
+• Evaluate the classification accuracy on the test set.
+Report the final accuracy in your PDF report
