@@ -1,13 +1,16 @@
 # AcademiClaw
 
-**A benchmark for evaluating AI agents on realistic academic workflows.**
+**A benchmark for evaluating AI agents on realistic academic workflows
+set by students.**
 
-AcademiClaw is a collection of 80 open-ended tasks that require an AI agent
-to plan, write code, run experiments inside a sandboxed environment, and
-produce a concrete deliverable (a script, a report, a figure, a dataset,
-etc.). Tasks are drawn from real graduate-level academic work across
-disciplines including systems programming, machine learning, NLP,
-scientific writing, data analysis, and domain-specific simulations.
+AcademiClaw is a collection of 80 open-ended tasks contributed by
+undergraduate students from their real academic work — coursework,
+research projects, competitions, and personal projects that they had
+already tried to solve with mainstream AI agents (Claude Code, Codex,
+Cursor, ...) and found those agents unable to handle. Each task
+requires the agent to plan, write code, run experiments inside a
+sandboxed Docker environment, and produce a concrete deliverable (a
+script, a report, a figure, a dataset, etc.).
 
 - **80 tasks** — 49 English, 31 Chinese
 - **Grounded in real academic work** — each task has a concrete deliverable
@@ -19,9 +22,9 @@ scientific writing, data analysis, and domain-specific simulations.
 - **Multi-agent harness** — supports Claude Code, generic OpenAI-compatible
   backends (`openclaw`), and manual mode out of the box
 
-The repository accompanies the paper _"AcademiClaw: A Benchmark for
-Evaluating AI Agents on Realistic Academic Workflows"_ (GAIR-NLP, 2026).
-See `CITATION.cff` for how to cite.
+The repository accompanies the paper _"AcademiClaw: When Students Set
+Challenges for AI Agents"_ (Yu, Lu, Si et al., 2026). See `CITATION.cff`
+for how to cite.
 
 
 ## Repository layout
@@ -123,18 +126,32 @@ registry in the harness and wire it up through `AGENT_TYPE` in `.env`.
 
 ## Dataset statistics (paper)
 
+AcademiClaw comprises 80 tasks distributed across six categories and
+25+ professional domains:
+
+| Category | Tasks | Representative example |
+| -------- | ----- | ---------------------- |
+| Research & Analysis       | 21 | ESP32-S3 multi-peripheral firmware analysis |
+| ML & AI Engineering       | 17 | Ascend NPU multilingual ASR deployment |
+| Software Engineering      | 17 | BVH-accelerated Monte Carlo path tracing renderer |
+| STEM Reasoning            | 11 | CMO 2024, IOL 2025, constraint-satisfaction deduction |
+| Language & Creativity     |  7 | Classical-to-modern Chinese lyric adaptation |
+| Applied & Domain-Specific |  7 | Riichi mahjong shanten / tile-acceptance calculator |
+
+Additional splits:
+
 | Split | Count | Notes |
 | ----- | ----- | ----- |
-| English (`en_*`) | 49 | CS, ML, NLP, scientific writing, data analysis |
-| Chinese (`zh_*`) | 31 | course-integrated tasks, sciences, humanities |
+| English (`en_*`) | 49 | |
+| Chinese (`zh_*`) | 31 | natively Chinese tasks, not translations |
 | GPU required     | 16 | training, rendering, or inference workloads |
 | CPU only         | 64 | |
 | **Total**        | **80** | |
 
-We release evaluation trajectories for seven frontier models
+We release evaluation trajectories for six frontier models
 (`claude-opus-4-6`, `claude-sonnet-4-6`, `gpt-5.4`,
-`gemini-3.1-pro-preview`, `glm51`, `MiniMax-M2.7`,
-`Qwen3.5-397B-A17B`). Full details are in the paper.
+`gemini-3.1-pro-preview`, `MiniMax-M2.7`, `Qwen3.5-397B-A17B`).
+Full details are in the paper.
 
 
 ## Citing
@@ -165,7 +182,11 @@ safeguards.
 
 ## Acknowledgements
 
-AcademiClaw is maintained by the GAIR-NLP group. Many tasks derive from
-open-source course materials, benchmarks, and research projects — their
-original authors are credited in task-level `context/` files wherever
-relevant.
+AcademiClaw is maintained by the GAIR-NLP group at Shanghai Jiao Tong
+University, in collaboration with SII. The task pool was contributed by
+undergraduate students of the _Large Language Model Technologies_
+course (class **AI3625**) at SJTU; each task is rooted in a real
+academic workflow those students had attempted with mainstream AI
+agents. Many tasks derive from open-source course materials, benchmarks,
+and research projects — their original authors are credited in
+task-level `context/` files wherever relevant.
