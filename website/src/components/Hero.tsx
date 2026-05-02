@@ -21,6 +21,13 @@ export default function Hero({ experiments }: HeroProps) {
   return (
     <section className="hero">
       <div className="container">
+        <img
+          src={`${import.meta.env.BASE_URL}icon-512.png`}
+          alt=""
+          className="hero__icon"
+          width={96}
+          height={96}
+        />
         <h1 className="hero__title">
           <span>Academi</span>Claw
         </h1>
