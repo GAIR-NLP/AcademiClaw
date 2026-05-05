@@ -7,11 +7,15 @@
 _A bilingual benchmark of 80 long-horizon tasks drawn from real
 undergraduate academic workflows that current AI agents fail to solve._
 
+[![arXiv](https://img.shields.io/badge/arXiv-2605.02661-b31b1b.svg)](https://arxiv.org/abs/2605.02661)
+[![HuggingFace](https://img.shields.io/badge/%F0%9F%A4%97%20HuggingFace-Paper-yellow)](https://huggingface.co/papers/2605.02661)
 [![License](https://img.shields.io/badge/License-Apache%202.0%20%2B%20third--party-blue.svg)](#license)
 [![Tasks](https://img.shields.io/badge/tasks-80-informational)](academiclaw/)
 [![Languages](https://img.shields.io/badge/languages-EN%20%7C%20ZH-informational)](#dataset-composition)
 [![GPU Tasks](https://img.shields.io/badge/GPU%20tasks-16-green)](#dataset-composition)
 [![Models](https://img.shields.io/badge/evaluated%20models-6-purple)](#main-results)
+
+**Paper:** [arXiv:2605.02661](https://arxiv.org/abs/2605.02661) · [HuggingFace Papers](https://huggingface.co/papers/2605.02661)
 
 </div>
 
@@ -447,21 +451,21 @@ better AI agents, not circumventing safeguards.
 
 ## Citation
 
-If you use AcademiClaw, please cite the paper — see
-[`CITATION.cff`](CITATION.cff) for the structured citation record. The
-preferred form (once the arXiv preprint is posted) will be:
+If you use AcademiClaw in your research, please cite:
 
 ```bibtex
 @article{yu2026academiclaw,
   title   = {AcademiClaw: When Students Set Challenges for AI Agents},
   author  = {Yu, Junjie and Lu, Pengrui and Si, Weiye and others and Liu, Pengfei},
-  journal = {arXiv preprint arXiv:XXXX.XXXXX},
+  journal = {arXiv preprint arXiv:2605.02661},
   year    = {2026},
-  url     = {https://arxiv.org/abs/XXXX.XXXXX}
+  url     = {https://arxiv.org/abs/2605.02661}
 }
 ```
 
-_The arXiv ID and DOI will be filled in upon the preprint's posting._
+See [`CITATION.cff`](CITATION.cff) for the full structured citation
+record (all authors and affiliations). The paper is also listed on
+[HuggingFace Papers](https://huggingface.co/papers/2605.02661).
 
 ---
 
